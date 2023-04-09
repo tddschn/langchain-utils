@@ -9,7 +9,6 @@ import argparse
 import sys
 
 from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
-from .loaders import load_youtube_url
 
 
 def get_args():
@@ -56,8 +55,12 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
+    from langchain.document_loaders import YoutubeLoader
+    from langchain.prompts import PromptTemplate
+
+    loader = YoutubeLoader.from_youtube_channel(args.youtube_url, add_video_info=True)
     print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
-    docs = load_youtube_url(args.youtube_url)
+    docs = loader.load()
     print(
         f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
         file=sys.stderr,
