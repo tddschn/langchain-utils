@@ -8,12 +8,7 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 import argparse
 import sys
 
-from .utils import format_date, get_word_count
-from .prompts import (
-    REPLY_OK_IF_YOU_READ_TEMPLATE,
-    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
-    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED,
-)
+from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
 
 
 def get_args():
@@ -64,7 +59,7 @@ def main():
     from langchain.prompts import PromptTemplate
 
     loader = YoutubeLoader.from_youtube_channel(args.youtube_url, add_video_info=True)
-    print(f'Loading transcript from {args.youtube_url}...', file=sys.stderr)
+    print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
     docs = loader.load()
     print(
         f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
@@ -83,46 +78,14 @@ def main():
         needs_splitting = True
     else:
         needs_splitting = False
-    if needs_splitting:
-        from langchain.text_splitter import TokenTextSplitter
-
-        splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=2000)
-        splitted = splitter.split_documents(docs)
-        num_chunks = len(splitted)
-        for i, doc in enumerate(splitted):
-            if i == 0:
-                prompt = PromptTemplate.from_template(
-                    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST
-                )
-            else:
-                prompt = PromptTemplate.from_template(
-                    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
-                ).partial(x=str(i + 1))
-            content = doc.page_content
-            formatted_prompt = prompt.format(what=what, content=content)
-            input(
-                f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}: '
-            )
-            import pyperclip
-
-            pyperclip.copy(formatted_prompt)
-
-        return
-    transcript = docs[0].page_content
-    prompt = PromptTemplate.from_template(REPLY_OK_IF_YOU_READ_TEMPLATE)
-    content = transcript
-    formatted_prompt = prompt.format(what=what, content=content)
-    if args.copy:
-        import pyperclip
-
-        print(
-            f'Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}',
-            file=sys.stderr,
-        )
-        pyperclip.copy(formatted_prompt)
-        print('Prompt copied to clipboard.', file=sys.stderr)
-    else:
-        print(formatted_prompt)
+    deliver_prompts(
+        what=what,
+        docs=docs,
+        should_be_only_one_doc=True,
+        needs_splitting=needs_splitting,
+        copy=args.copy,
+        chunk_size=args.chunk_size,
+    )
 
 
 if __name__ == '__main__':

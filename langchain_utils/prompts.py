@@ -17,7 +17,7 @@ Below is the first part of {what}, reply "Read part 1 OK" if you read:
 '''.strip()
 
 REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED = '''
-Below is the the next part of {what}, reply "Read part {x} OK" if you read:
+Below is the next part of {what}, reply "Read part {x} OK" if you read:
 
 """
 {content}
