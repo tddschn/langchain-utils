@@ -1,0 +1,5 @@
+{
+  "esbonio.sphinx.confDir": "",
+  "notebook.output.textLineLimit": 300,
+  "cody.codebase": "https://github.com/hwchase17/langchain"
+}
