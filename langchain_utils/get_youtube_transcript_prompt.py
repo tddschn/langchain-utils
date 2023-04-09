@@ -8,7 +8,7 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 import argparse
 import sys
 
-from .utils import get_token_count, get_word_count
+from .utils import format_date, get_word_count
 from .prompts import (
     REPLY_OK_IF_YOU_READ_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
@@ -51,7 +51,9 @@ def get_args():
         default=2000,
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    args.youtube_url = args.youtube_url.split('&')[0]
+    return args
 
 
 def main():
@@ -68,6 +70,14 @@ def main():
         f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
         file=sys.stderr,
     )
+    metadata = docs[0].metadata
+    title = metadata['title']
+    author = metadata['author']
+    publish_date = format_date(metadata['publish_date'])
+    what = f'''the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}'''
+    print(f'Title: {title}', file=sys.stderr)
+    print(f'Author: {author}', file=sys.stderr)
+    print(f'Publish date: {publish_date}', file=sys.stderr)
     # if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
     if args.split or get_word_count(docs[0].page_content) > args.chunk_size * 0.75:
         needs_splitting = True
@@ -79,7 +89,6 @@ def main():
         splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=2000)
         splitted = splitter.split_documents(docs)
         num_chunks = len(splitted)
-        title = docs[0].metadata['title']
         for i, doc in enumerate(splitted):
             if i == 0:
                 prompt = PromptTemplate.from_template(
@@ -89,7 +98,6 @@ def main():
                 prompt = PromptTemplate.from_template(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
                 ).partial(x=str(i + 1))
-            what = f'the transcript of a YouTube video titled "{title}"'
             content = doc.page_content
             formatted_prompt = prompt.format(what=what, content=content)
             input(f'Press Enter to copy prompt {i+1}/{num_chunks}: ')
@@ -99,9 +107,7 @@ def main():
 
         return
     transcript = docs[0].page_content
-    title = docs[0].metadata['title']
     prompt = PromptTemplate.from_template(REPLY_OK_IF_YOU_READ_TEMPLATE)
-    what = f'the transcript of a YouTube video titled "{title}"'
     content = transcript
     formatted_prompt = prompt.format(what=what, content=content)
     if args.copy:

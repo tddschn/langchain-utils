@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
 
 def get_token_count(s: str, model_name: str = 'gpt-3.5-turbo') -> int:
     from tiktoken import encoding_for_model
@@ -13,3 +19,7 @@ def get_token_count(s: str, model_name: str = 'gpt-3.5-turbo') -> int:
 
 def get_word_count(s: str) -> int:
     return len(s.split())
+
+
+def format_date(dt: 'datetime') -> str:
+    return dt.strftime('%Y-%m-%d')
