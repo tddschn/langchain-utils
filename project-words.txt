@@ -1,2 +1,4 @@
 langchain
+pyperclip
+tiktoken
 Xinyuan
