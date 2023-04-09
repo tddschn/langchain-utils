@@ -100,7 +100,9 @@ def main():
                 ).partial(x=str(i + 1))
             content = doc.page_content
             formatted_prompt = prompt.format(what=what, content=content)
-            input(f'Press Enter to copy prompt {i+1}/{num_chunks}: ')
+            input(
+                f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}: '
+            )
             import pyperclip
 
             pyperclip.copy(formatted_prompt)
@@ -113,8 +115,12 @@ def main():
     if args.copy:
         import pyperclip
 
+        print(
+            f'Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}',
+            file=sys.stderr,
+        )
         pyperclip.copy(formatted_prompt)
-        print('Prompt copied to clipboard.')
+        print('Prompt copied to clipboard.', file=sys.stderr)
     else:
         print(formatted_prompt)
 
