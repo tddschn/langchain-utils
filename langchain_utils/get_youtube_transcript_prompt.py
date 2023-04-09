@@ -6,8 +6,9 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 """
 
 import argparse
+import sys
 
-from .utils import get_token_count
+from .utils import get_token_count, get_word_count
 from .prompts import (
     REPLY_OK_IF_YOU_READ_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
@@ -61,8 +62,14 @@ def main():
     from langchain.prompts import PromptTemplate
 
     loader = YoutubeLoader.from_youtube_channel(args.youtube_url, add_video_info=True)
+    print(f'Loading transcript from {args.youtube_url}...', file=sys.stderr)
     docs = loader.load()
-    if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
+    print(
+        f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
+        file=sys.stderr,
+    )
+    # if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
+    if args.split or get_word_count(docs[0].page_content) > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False
@@ -81,10 +88,10 @@ def main():
             else:
                 prompt = PromptTemplate.from_template(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
-                )
+                ).partial(x=str(i + 1))
             what = f'the transcript of a YouTube video titled "{title}"'
             content = doc.page_content
-            formatted_prompt = prompt.format(what=what, content=content, x=i + 1)
+            formatted_prompt = prompt.format(what=what, content=content)
             input(f'Press Enter to copy prompt {i+1}/{num_chunks}: ')
             import pyperclip
 

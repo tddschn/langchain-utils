@@ -9,3 +9,7 @@ def get_token_count(s: str, model_name: str = 'gpt-3.5-turbo') -> int:
 
     # calculate the number of tokens in the encoded text
     return len(tokenized_text)
+
+
+def get_word_count(s: str) -> int:
+    return len(s.split())
