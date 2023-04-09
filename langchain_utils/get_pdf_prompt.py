@@ -9,6 +9,8 @@ import argparse
 import sys
 
 from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
+from .loaders import load_pdf
+from .config import DEFAULT_PDF_WHAT
 
 
 def get_args():
@@ -19,7 +21,9 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-    parser.add_argument('youtube_url', metavar='YouTube URL', help='YouTube URL')
+    parser.add_argument(
+        'pdf_path', help='Path to the PDF file', metavar='PDF Path', type=str
+    )
     parser.add_argument(
         '-c', '--copy', help='Copy the prompt to clipboard', action='store_true'
     )
@@ -45,9 +49,15 @@ def get_args():
         type=int,
         default=2000,
     )
+    parser.add_argument(
+        '-w',
+        '--what',
+        help='Initial knowledge you want to insert before the PDF content in the prompt',
+        type=str,
+        default=DEFAULT_PDF_WHAT,
+    )
 
     args = parser.parse_args()
-    args.youtube_url = args.youtube_url.split('&')[0]
     return args
 
 
@@ -55,14 +65,13 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    from langchain.document_loaders import YoutubeLoader
-    from langchain.prompts import PromptTemplate
 
-    loader = YoutubeLoader.from_youtube_channel(args.youtube_url, add_video_info=True)
     print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
-    docs = loader.load()
+    docs = load_pdf(args.pdf_path)
+    texts = [doc.page_content for doc in docs]
+    all_text = '\n'.join(texts)
     print(
-        f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
+        f'Loaded {len(docs)} pages. Word count: {get_word_count((all_text))} Char count: {len(all_text)}',
         file=sys.stderr,
     )
     metadata = docs[0].metadata

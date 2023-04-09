@@ -14,6 +14,8 @@ keywords = ["langchain", "utils", "LLM", "prompts", "CLI"]
 [tool.poetry.scripts]
 get-youtube-transcript-prompt = "langchain_utils.get_youtube_transcript_prompt:main"
 ytprompt = "langchain_utils.get_youtube_transcript_prompt:main"
+get-pdf-prompt = "langchain_utils.get_pdf_prompt:main"
+pdfprompt = "langchain_utils.get_pdf_prompt:main"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/tddschn/langchain-utils/issues"
