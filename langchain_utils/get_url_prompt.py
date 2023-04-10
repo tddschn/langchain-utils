@@ -38,6 +38,9 @@ def get_args():
         '-c', '--copy', help='Copy the prompt to clipboard', action='store_true'
     )
     parser.add_argument(
+        '-e', '--edit', help='Edit the prompt and copy manually', action='store_true'
+    )
+    parser.add_argument(
         '-m',
         '--model',
         help='Model to use',
@@ -116,6 +119,7 @@ def main():
         documents=[merged] if args.merge else docs,  # type: ignore
         needs_splitting=needs_splitting,
         copy=args.copy,
+        edit=args.edit,
         should_be_only_one_doc=True,
         chunk_size=args.chunk_size,
         extra_chunk_info_fn=url_source_info,

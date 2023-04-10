@@ -48,12 +48,41 @@ def url_source_info(document: 'Document') -> str:
         return ''
 
 
+def save_str_to_tempfile(s: str, suffix: str = '.txt') -> str:
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(mode='w', suffix=suffix, delete=False) as f:
+        f.write(s)
+        return f.name
+
+
+def open_file(path: str):
+    # if on macOS, open with default app
+    if sys.platform == 'darwin':
+        import subprocess
+
+        subprocess.call(('open', path))
+    # if on Linux, open with default app
+    elif sys.platform.startswith('linux'):
+        import subprocess
+
+        subprocess.call(('xdg-open', path))
+    # if on Windows, open with default app
+    elif sys.platform == 'win32':
+        import os
+
+        os.startfile(path)
+    else:
+        raise NotImplementedError(f'Unsupported platform: {sys.platform}')
+
+
 def deliver_prompts(
     what: str,
     documents: list['Document'],
     should_be_only_one_doc: bool = False,
     needs_splitting: bool = False,
     copy: bool = True,
+    edit: bool = False,
     chunk_size: int = 2000,
     extra_chunk_info_fn: Callable[['Document'], str] = lambda doc: '',
     dry_run: bool = False,
@@ -70,6 +99,16 @@ def deliver_prompts(
                 file=sys.stderr,
             )
             if not dry_run:
+                if edit:
+                    formatted_prompt_path = save_str_to_tempfile(
+                        formatted_prompt, suffix='.txt'
+                    )
+                    open_file(formatted_prompt_path)
+                    print(
+                        f'Please edit the prompt at {formatted_prompt_path} and copy it yourself.',
+                        file=sys.stderr,
+                    )
+                    return
                 import pyperclip
 
                 pyperclip.copy(formatted_prompt)
@@ -78,6 +117,8 @@ def deliver_prompts(
             print(formatted_prompt)
 
     def deliver_multiple_docs(documents: list['Document']):
+        if edit:
+            print(f'Please copy the prompts after each edits.', file=sys.stderr)
         for i, doc in enumerate(documents):
             if i == 0:
                 prompt = PromptTemplate.from_template(
@@ -93,6 +134,15 @@ def deliver_prompts(
                 print(
                     f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
                 )
+                continue
+            if edit:
+                input(
+                    f'Press Enter to edit prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
+                )
+                formatted_prompt_path = save_str_to_tempfile(
+                    formatted_prompt, suffix='.txt'
+                )
+                open_file(formatted_prompt_path)
                 continue
             input(
                 f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '

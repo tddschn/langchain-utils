@@ -1,6 +1,12 @@
 docstore
+KHTML
 langchain
+pdfprompt
+pipx
 pymupdf
 pyperclip
+startfile
 tiktoken
+urlprompt
 Xinyuan
+ytprompt
