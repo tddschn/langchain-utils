@@ -16,7 +16,7 @@ from .utils import (
     url_source_info,
 )
 from .loaders import load_url
-from .config import DEFAULT_PDF_WHAT
+from .config import DEFAULT_URL_WHAT
 
 
 def get_args():
@@ -70,7 +70,7 @@ def get_args():
         '--what',
         help='Initial knowledge you want to insert before the PDF content in the prompt',
         type=str,
-        default=DEFAULT_PDF_WHAT,
+        default=DEFAULT_URL_WHAT,
     )
     parser.add_argument(
         '-j',
