@@ -17,55 +17,24 @@ from .utils import (
 )
 from .loaders import load_pdf
 from .config import DEFAULT_PDF_WHAT
+from .utils_argparse import get_get_prompt_base_arg_parser
 
 
 def get_args():
     """Get command-line arguments"""
 
-    parser = argparse.ArgumentParser(
-        description='Get a prompt consisting the text content of a PDF file',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    parser = get_get_prompt_base_arg_parser(
+        description='Get a prompt consisting the text content of a PDF file'
     )
 
     parser.add_argument(
         'pdf_path', help='Path to the PDF file', metavar='PDF Path', type=str
     )
     parser.add_argument(
-        '-V',
-        '--version',
-        action='version',
-        version=f'%(prog)s {__version__}',
-    )
-    parser.add_argument(
-        '-c', '--copy', help='Copy the prompt to clipboard', action='store_true'
-    )
-    parser.add_argument(
-        '-m',
-        '--model',
-        help='Model to use',
-        metavar='model',
-        type=str,
-        default='gpt-3.5-turbo',
-    )
-    parser.add_argument(
-        '-S',
-        '--split',
-        help='Split the prompt into multiple parts',
-        action='store_true',
-    )
-    parser.add_argument(
         '-M',
         '--merge',
         help='Merge contents of all pages before processing',
         action='store_true',
-    )
-    parser.add_argument(
-        '-s',
-        '--chunk-size',
-        help='Chunk size when splitting transcript, also used to determine whether to split',
-        metavar='chunk_size',
-        type=int,
-        default=2000,
     )
     parser.add_argument(
         '-w',

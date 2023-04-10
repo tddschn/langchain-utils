@@ -93,22 +93,27 @@ def deliver_prompts(
         prompt = PromptTemplate.from_template(REPLY_OK_IF_YOU_READ_TEMPLATE)
         content = document.page_content
         formatted_prompt = prompt.format(what=what, content=content)
+
+        def edit_prompt(formatted_prompt: str = formatted_prompt):
+            formatted_prompt_path = save_str_to_tempfile(
+                formatted_prompt, suffix='.txt'
+            )
+            open_file(formatted_prompt_path)
+            print(
+                f'Please edit the prompt at {formatted_prompt_path} and copy it yourself.',
+                file=sys.stderr,
+            )
+            return
+
+        if edit and not dry_run:
+            edit_prompt()
+            return
         if copy:
             print(
                 f'Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(document)}',
                 file=sys.stderr,
             )
             if not dry_run:
-                if edit:
-                    formatted_prompt_path = save_str_to_tempfile(
-                        formatted_prompt, suffix='.txt'
-                    )
-                    open_file(formatted_prompt_path)
-                    print(
-                        f'Please edit the prompt at {formatted_prompt_path} and copy it yourself.',
-                        file=sys.stderr,
-                    )
-                    return
                 import pyperclip
 
                 pyperclip.copy(formatted_prompt)

@@ -11,50 +11,17 @@ import sys
 from . import __version__
 from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
 from .loaders import load_youtube_url
+from .utils_argparse import get_get_prompt_base_arg_parser
 
 
 def get_args():
     """Get command-line arguments"""
 
-    parser = argparse.ArgumentParser(
-        description='Get a prompt consisting Title and Transcript of a YouTube Video',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    parser = get_get_prompt_base_arg_parser(
+        description='Get a prompt consisting Title and Transcript of a YouTube Video'
     )
 
     parser.add_argument('youtube_url', metavar='YouTube URL', help='YouTube URL')
-    parser.add_argument(
-        '-V',
-        '--version',
-        action='version',
-        version=f'%(prog)s {__version__}',
-    )
-    parser.add_argument(
-        '-c', '--copy', help='Copy the prompt to clipboard', action='store_true'
-    )
-    parser.add_argument(
-        '-m',
-        '--model',
-        help='Model to use',
-        metavar='model',
-        type=str,
-        default='gpt-3.5-turbo',
-    )
-    parser.add_argument(
-        '-S',
-        '--split',
-        help='Split the prompt into multiple parts',
-        action='store_true',
-    )
-    parser.add_argument(
-        '-s',
-        '--chunk-size',
-        help='Chunk size when splitting transcript, also used to determine whether to split',
-        metavar='chunk_size',
-        type=int,
-        default=2000,
-    )
-
-    parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
 
     args = parser.parse_args()
     args.youtube_url = args.youtube_url.split('&')[0]
