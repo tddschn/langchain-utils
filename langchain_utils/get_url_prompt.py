@@ -91,7 +91,7 @@ def main():
     args = get_args()
 
     print(f'Loading webpage from {args.url} ...', file=sys.stderr)
-    docs = load_url(args.url, javascript=args.javascript)
+    docs = load_url(urls=[args.url], javascript=args.javascript)
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))

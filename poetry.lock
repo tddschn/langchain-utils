@@ -778,6 +778,24 @@ files = [
 ]
 
 [[package]]
+name = "icecream"
+version = "2.1.3"
+description = "Never use print() to debug again; inspect variables, expressions, and program execution with a single, simple function call."
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "icecream-2.1.3-py2.py3-none-any.whl", hash = "sha256:757aec31ad4488b949bc4f499d18e6e5973c40cc4d4fc607229e78cfaec94c34"},
+    {file = "icecream-2.1.3.tar.gz", hash = "sha256:0aa4a7c3374ec36153a1d08f81e3080e83d8ac1eefd97d2f4fe9544e8f9b49de"},
+]
+
+[package.dependencies]
+asttokens = ">=2.0.1"
+colorama = ">=0.3.9"
+executing = ">=0.3.1"
+pygments = ">=2.2.0"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -1165,24 +1183,6 @@ files = [
 ]
 
 [[package]]
-name = "msg-parser"
-version = "1.2.0"
-description = "This module enables reading, parsing and converting Microsoft Outlook MSG E-Mail files."
-category = "main"
-optional = false
-python-versions = ">=3.4"
-files = [
-    {file = "msg_parser-1.2.0-py2.py3-none-any.whl", hash = "sha256:d47a2f0b2a359cb189fad83cc991b63ea781ecc70d91410324273fbf93e95375"},
-    {file = "msg_parser-1.2.0.tar.gz", hash = "sha256:0de858d4fcebb6c8f6f028da83a17a20fe01cdce67c490779cf43b3b0162aa66"},
-]
-
-[package.dependencies]
-olefile = ">=0.46"
-
-[package.extras]
-rtf = ["compressed-rtf (>=1.0.5)"]
-
-[[package]]
 name = "multidict"
 version = "6.0.4"
 description = "multidict implementation"
@@ -1352,17 +1352,6 @@ files = [
     {file = "numpy-1.24.2-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f9006288bcf4895917d02583cf3411f98631275bc67cce355a7f39f8c14338fa"},
     {file = "numpy-1.24.2-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:150947adbdfeceec4e5926d956a06865c1c690f2fd902efede4ca6fe2e657c3f"},
     {file = "numpy-1.24.2.tar.gz", hash = "sha256:003a9f530e880cb2cd177cba1af7220b9aa42def9c4afc2a2fc3ee6be7eb2b22"},
-]
-
-[[package]]
-name = "olefile"
-version = "0.46"
-description = "Python package to parse, read and write Microsoft OLE2 files (Structured Storage or Compound Document, Microsoft Office)"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-files = [
-    {file = "olefile-0.46.zip", hash = "sha256:133b031eaf8fd2c9399b78b8bc5b8fcbe4c31e85295749bb17a87cba8f3c3964"},
 ]
 
 [[package]]
@@ -1890,18 +1879,6 @@ files = [
     {file = "PyMuPDF-1.21.1-cp39-cp39-win32.whl", hash = "sha256:909afad284c24f25a831b37e433e444dc4cb5b3e38b3f761b1e4acad5c65327d"},
     {file = "PyMuPDF-1.21.1-cp39-cp39-win_amd64.whl", hash = "sha256:069ba56c28cb9b603d016c63f23a21bf22a00c5b2a92286bf3dd6a2759e119d4"},
     {file = "PyMuPDF-1.21.1.tar.gz", hash = "sha256:f815741a435c62a0036bbcbf5fa6c533567bd69c5338d413714fc57b22db93e0"},
-]
-
-[[package]]
-name = "pypandoc"
-version = "1.11"
-description = "Thin wrapper for pandoc."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pypandoc-1.11-py3-none-any.whl", hash = "sha256:b260596934e9cfc6513056110a7c8600171d414f90558bf4407e68b209be8007"},
-    {file = "pypandoc-1.11.tar.gz", hash = "sha256:7f6d68db0e57e0f6961bec2190897118c4d305fc2d31c22cd16037f22ee084a5"},
 ]
 
 [[package]]
@@ -2632,13 +2609,13 @@ files = [
 
 [[package]]
 name = "unstructured"
-version = "0.5.11"
+version = "0.5.2"
 description = "A library that prepares raw documents for downstream ML tasks."
 category = "main"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "unstructured-0.5.11.tar.gz", hash = "sha256:9b0272a1d52d9f1411a4ebb5c051abbf1239625b055397253ba4400d727ee4c1"},
+    {file = "unstructured-0.5.2.tar.gz", hash = "sha256:7e5ab91bb360aec82f4c673e61110fa0e8a8dd785d75da47ac4cf1540be472e8"},
 ]
 
 [package.dependencies]
@@ -2646,26 +2623,21 @@ argilla = "*"
 certifi = ">=2022.12.07"
 lxml = "*"
 markdown = "*"
-msg_parser = "*"
 nltk = "*"
 openpyxl = "*"
 pandas = "*"
 pillow = "*"
-pypandoc = "*"
 python-docx = "*"
 python-magic = "*"
 python-pptx = "*"
 requests = "*"
 
 [package.extras]
-azure = ["adlfs", "fsspec"]
 github = ["pygithub (==1.57.0)"]
-gitlab = ["python-gitlab"]
-google-drive = ["google-api-python-client", "protobuf (<3.21)"]
 huggingface = ["langdetect", "sacremoses", "sentencepiece", "torch", "transformers"]
-local-inference = ["unstructured-inference (==0.3.2)"]
+local-inference = ["unstructured-inference (>=0.2.4,<0.2.8)"]
 reddit = ["praw"]
-s3 = ["fsspec", "s3fs"]
+s3 = ["boto3"]
 wikipedia = ["wikipedia"]
 
 [[package]]
@@ -2833,4 +2805,4 @@ requests = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "79b542a82306b6a19d207bf347f7b5d88ac907e6850bfd1ff70c5ebf8cbe3521"
+content-hash = "90cc19a7b85944982ac451784a209b077e2fb3c8bdae4c98376a445d116742aa"

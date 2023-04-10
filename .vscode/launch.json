@@ -13,7 +13,8 @@
       "type": "python",
       "request": "launch",
       "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/urlprompt",
-      "args": ["https://mp.weixin.qq.com/s/FsrDnCFKGD-FzP5YD76tbA", "-c"]
+      "args": ["https://mp.weixin.qq.com/s/FsrDnCFKGD-FzP5YD76tbA", "-c"],
+      "justMyCode": false
     }
   ]
 }
