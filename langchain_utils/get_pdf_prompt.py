@@ -4,13 +4,11 @@ Author : Xinyuan Chen <45612704+tddschn@users.noreply.github.com>
 Date   : 2023-04-09
 """
 
-import argparse
 import sys
 
 from . import __version__
 from .utils import (
     deliver_prompts,
-    format_date,
     get_word_count,
     deliver_prompts,
     pymupdf_doc_page_info,
@@ -80,6 +78,7 @@ def main():
         documents=[merged] if args.merge else docs,  # type: ignore
         needs_splitting=needs_splitting,
         copy=args.copy,
+        edit=args.edit,
         chunk_size=args.chunk_size,
         extra_chunk_info_fn=pymupdf_doc_page_info,
         dry_run=args.dry_run,

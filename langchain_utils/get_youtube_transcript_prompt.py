@@ -5,7 +5,6 @@ Date   : 2023-04-09
 Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 """
 
-import argparse
 import sys
 
 from . import __version__
@@ -57,6 +56,7 @@ def main():
         should_be_only_one_doc=True,
         needs_splitting=needs_splitting,
         copy=args.copy,
+        edit=args.edit,
         chunk_size=args.chunk_size,
         dry_run=args.dry_run,
     )
