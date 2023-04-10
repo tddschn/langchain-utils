@@ -8,6 +8,7 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 import argparse
 import sys
 
+from . import __version__
 from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
 from .loaders import load_youtube_url
 
@@ -21,6 +22,12 @@ def get_args():
     )
 
     parser.add_argument('youtube_url', metavar='YouTube URL', help='YouTube URL')
+    parser.add_argument(
+        '-V',
+        '--version',
+        action='version',
+        version=f'%(prog)s {__version__}',
+    )
     parser.add_argument(
         '-c', '--copy', help='Copy the prompt to clipboard', action='store_true'
     )
