@@ -2,7 +2,6 @@
 """
 Author : Xinyuan Chen <45612704+tddschn@users.noreply.github.com>
 Date   : 2023-04-09
-Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 """
 
 import argparse
@@ -24,7 +23,7 @@ def get_args():
     """Get command-line arguments"""
 
     parser = argparse.ArgumentParser(
-        description='Get a prompt consisting Title and Transcript of a YouTube Video',
+        description='Get a prompt consisting the text content of a PDF file',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
