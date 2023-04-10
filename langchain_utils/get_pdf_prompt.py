@@ -66,29 +66,30 @@ def main():
 
     args = get_args()
 
-    print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
+    print(f'Loading PDF from {args.pdf_path} ...', file=sys.stderr)
     docs = load_pdf(args.pdf_path)
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
+    word_count = get_word_count((all_text))
     print(
-        f'Loaded {len(docs)} pages. Word count: {get_word_count((all_text))} Char count: {len(all_text)}',
+        f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
         file=sys.stderr,
     )
-    metadata = docs[0].metadata
-    title = metadata['title']
-    author = metadata['author']
-    publish_date = format_date(metadata['publish_date'])
-    what = f'''the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}'''
-    print(f'Title: {title}', file=sys.stderr)
-    print(f'Author: {author}', file=sys.stderr)
-    print(f'Publish date: {publish_date}', file=sys.stderr)
+    # metadata = docs[0].metadata
+    # title = metadata['title']
+    # author = metadata['author']
+    # publish_date = format_date(metadata['publish_date'])
+    # what = f'''the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}'''
+    # print(f'Title: {title}', file=sys.stderr)
+    # print(f'Author: {author}', file=sys.stderr)
+    # print(f'Publish date: {publish_date}', file=sys.stderr)
     # if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
-    if args.split or get_word_count(docs[0].page_content) > args.chunk_size * 0.75:
+    if args.split or word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False
     deliver_prompts(
-        what=what,
+        what=args.what,
         docs=docs,
         should_be_only_one_doc=True,
         needs_splitting=needs_splitting,
