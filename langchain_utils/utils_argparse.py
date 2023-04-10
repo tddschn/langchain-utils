@@ -42,5 +42,13 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
         type=int,
         default=2000,
     )
+    parser.add_argument(
+        '-P',
+        '--parts',
+        help='Parts to select in the processes list of Documents',
+        type=int,
+        nargs='+',
+        default=None,
+    )
     parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
     return parser

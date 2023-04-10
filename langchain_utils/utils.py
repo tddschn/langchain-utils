@@ -86,6 +86,7 @@ def deliver_prompts(
     chunk_size: int = 2000,
     extra_chunk_info_fn: Callable[['Document'], str] = lambda doc: '',
     dry_run: bool = False,
+    parts: list[int] | None = None,
 ):
     from langchain.prompts import PromptTemplate
 
@@ -167,6 +168,10 @@ def deliver_prompts(
 
         splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=chunk_size)
         splitted = splitter.split_documents(documents)
+        if parts:
+            print(f'Total number of parts: {len(parts)}', file=sys.stderr)
+            print(f'Using parts: {parts}', file=sys.stderr)
+            splitted = [splitted[i - 1] for i in parts]
         deliver_multiple_docs(splitted)
 
     elif should_be_only_one_doc:
