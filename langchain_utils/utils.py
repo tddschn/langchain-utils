@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, NoReturn
 import sys
 from .prompts import (
     REPLY_OK_IF_YOU_READ_TEMPLATE,
@@ -34,7 +34,10 @@ def format_date(dt: 'datetime') -> str:
 
 def pymupdf_doc_page_info(document: 'Document') -> str:
     metadata = document.metadata
-    return f', Page {metadata["page_number"]}/{metadata["total_pages"]}'
+    if 'page_number' in metadata:
+        return f', Page {metadata["page_number"]}/{metadata["total_pages"]}'
+    else:
+        return ''
 
 
 def deliver_prompts(
@@ -107,3 +110,7 @@ def deliver_prompts(
         deliver_single_doc(documents[0])
     else:
         deliver_multiple_docs(documents)
+
+
+def assert_never(a: NoReturn) -> NoReturn:
+    raise RuntimeError("Should not get here")

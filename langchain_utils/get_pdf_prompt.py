@@ -95,23 +95,22 @@ def main():
         f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
         file=sys.stderr,
     )
-    # metadata = docs[0].metadata
-    # title = metadata['title']
-    # author = metadata['author']
-    # publish_date = format_date(metadata['publish_date'])
-    # what = f'''the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}'''
-    # print(f'Title: {title}', file=sys.stderr)
-    # print(f'Author: {author}', file=sys.stderr)
-    # print(f'Publish date: {publish_date}', file=sys.stderr)
-    # if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
+    if args.merge:
+        from langchain.docstore.document import Document
+
+        merged = Document(
+            page_content=all_text,
+            metadata={
+                k: v for k, v in docs[0].metadata.items() if k not in {'page_number'}
+            },
+        )
     if args.split or word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False
     deliver_prompts(
         what=args.what,
-        documents=docs,
-        should_be_only_one_doc=True,
+        documents=[merged] if args.merge else docs,  # type: ignore
         needs_splitting=needs_splitting,
         copy=args.copy,
         chunk_size=args.chunk_size,

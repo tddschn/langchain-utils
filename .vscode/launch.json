@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "pdfprompt dry run",
+            "type": "python",
+            "request": "launch",
+            "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/pdfprompt",
+            "args": [
+                "/Users/tscp/Downloads/2203.06904.pdf",
+                "-n"
+            ]
+        }
+    ]
+}
