@@ -1,5 +1,6 @@
 docstore
 langchain
+pymupdf
 pyperclip
 tiktoken
 Xinyuan

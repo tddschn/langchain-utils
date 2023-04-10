@@ -8,7 +8,13 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 import argparse
 import sys
 
-from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
+from .utils import (
+    deliver_prompts,
+    format_date,
+    get_word_count,
+    deliver_prompts,
+    pymupdf_doc_page_info,
+)
 from .loaders import load_pdf
 from .config import DEFAULT_PDF_WHAT
 
@@ -95,6 +101,7 @@ def main():
         needs_splitting=needs_splitting,
         copy=args.copy,
         chunk_size=args.chunk_size,
+        extra_chunk_info_fn=pymupdf_doc_page_info,
     )
 
 
