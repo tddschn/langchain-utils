@@ -160,7 +160,7 @@ def deliver_prompts(
 
     if dry_run:
         print(
-            f'Dry running. Nothing will be copied to your clipboard, and you don'
+            f'Dry running. Nothing will be copied to your clipboard, and you don\''
             't need to press Enter to move forward.'
         )
     if needs_splitting:
