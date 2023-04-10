@@ -25,7 +25,7 @@ def get_args():
         description='Get a prompt consisting the text content of a webpage'
     )
 
-    parser.add_argument('url', help='URL', metavar='URL', type=str)
+    parser.add_argument('url', help='URL to the webpage', metavar='URL', type=str)
     parser.add_argument(
         '-w',
         '--what',
