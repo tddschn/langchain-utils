@@ -14,7 +14,7 @@ from .utils import (
     format_date,
     get_word_count,
     deliver_prompts,
-    pymupdf_doc_page_info,
+    url_source_info,
 )
 from .loaders import load_url
 from .config import DEFAULT_PDF_WHAT
@@ -73,6 +73,12 @@ def get_args():
         type=str,
         default=DEFAULT_PDF_WHAT,
     )
+    parser.add_argument(
+        '-j',
+        '--javascript',
+        help='Use JavaScript to render the page',
+        action='store_true',
+    )
     parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
 
     args = parser.parse_args()
@@ -85,7 +91,7 @@ def main():
     args = get_args()
 
     print(f'Loading webpage from {args.url} ...', file=sys.stderr)
-    docs = load_url(args.url)
+    docs = load_url(args.url, javascript=args.javascript)
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))
@@ -113,7 +119,7 @@ def main():
         copy=args.copy,
         should_be_only_one_doc=True,
         chunk_size=args.chunk_size,
-        extra_chunk_info_fn=pymupdf_doc_page_info,
+        extra_chunk_info_fn=url_source_info,
         dry_run=args.dry_run,
     )
 

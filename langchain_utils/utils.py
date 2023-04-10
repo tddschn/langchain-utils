@@ -40,6 +40,14 @@ def pymupdf_doc_page_info(document: 'Document') -> str:
         return ''
 
 
+def url_source_info(document: 'Document') -> str:
+    metadata = document.metadata
+    if 'source' in metadata:
+        return f', URL: {metadata["source"]}'
+    else:
+        return ''
+
+
 def deliver_prompts(
     what: str,
     documents: list['Document'],
