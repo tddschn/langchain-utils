@@ -20,3 +20,16 @@ def load_pdf(pdf_path: str) -> list['Document']:
     loader = PyMuPDFLoader(pdf_path)
     docs = loader.load()
     return docs
+
+
+def load_url(url: str | list[str], javascript: bool = False) -> list['Document']:
+    from langchain.document_loaders import UnstructuredURLLoader, SeleniumURLLoader
+
+    if javascript:
+        loader_class = SeleniumURLLoader
+    else:
+        loader_class = UnstructuredURLLoader
+
+    loader = loader_class(urls=[url] if isinstance(url, str) else url)
+    docs = loader.load()
+    return docs
