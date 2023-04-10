@@ -58,8 +58,8 @@ options:
 ```
 $ pdfprompt --help
 
-usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-n] [-M]
-                 [-w WHAT]
+usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-n]
+                 [-p PAGES [PAGES ...]] [-M] [-w WHAT]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -79,11 +79,14 @@ options:
                         Chunk size when splitting transcript, also used to
                         determine whether to split (default: 2000)
   -n, --dry-run         Dry run (default: False)
+  -p PAGES [PAGES ...], --pages PAGES [PAGES ...]
+                        Only include specified page numbers (default: None)
   -M, --merge           Merge contents of all pages before processing
                         (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a PDF
                         file)
+
 
 ```
 

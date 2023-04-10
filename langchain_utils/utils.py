@@ -125,6 +125,7 @@ def deliver_prompts(
         if edit:
             print(f'Please copy the prompts after each edits.', file=sys.stderr)
         for i, doc in enumerate(documents):
+            num_chunks = len(documents)
             if i == 0:
                 prompt = PromptTemplate.from_template(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST
@@ -166,7 +167,6 @@ def deliver_prompts(
 
         splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=chunk_size)
         splitted = splitter.split_documents(documents)
-        num_chunks = len(splitted)
         deliver_multiple_docs(splitted)
 
     elif should_be_only_one_doc:

@@ -29,6 +29,14 @@ def get_args():
         'pdf_path', help='Path to the PDF file', metavar='PDF Path', type=str
     )
     parser.add_argument(
+        '-p',
+        '--pages',
+        help='Only include specified page numbers',
+        type=int,
+        nargs='+',
+        default=None,
+    )
+    parser.add_argument(
         '-M',
         '--merge',
         help='Merge contents of all pages before processing',
@@ -53,6 +61,10 @@ def main():
 
     print(f'Loading PDF from {args.pdf_path} ...', file=sys.stderr)
     docs = load_pdf(args.pdf_path)
+    num_whole_pdf_pages = len(docs)
+    if args.pages:
+        args.pages = [p for p in args.pages if p <= num_whole_pdf_pages and p > 0]
+        docs = [doc for doc in docs if doc.metadata['page_number'] in args.pages]
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))
