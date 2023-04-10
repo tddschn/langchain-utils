@@ -39,7 +39,7 @@ def pymupdf_doc_page_info(document: 'Document') -> str:
 
 def deliver_prompts(
     what: str,
-    docs: list['Document'],
+    documents: list['Document'],
     should_be_only_one_doc: bool = False,
     needs_splitting: bool = False,
     copy: bool = True,
@@ -99,11 +99,11 @@ def deliver_prompts(
         from langchain.text_splitter import TokenTextSplitter
 
         splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=chunk_size)
-        splitted = splitter.split_documents(docs)
+        splitted = splitter.split_documents(documents)
         num_chunks = len(splitted)
         deliver_multiple_docs(splitted)
 
     elif should_be_only_one_doc:
-        deliver_single_doc(docs[0])
+        deliver_single_doc(documents[0])
     else:
-        deliver_multiple_docs(docs)
+        deliver_multiple_docs(documents)

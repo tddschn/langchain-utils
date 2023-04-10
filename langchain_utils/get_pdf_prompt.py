@@ -55,6 +55,12 @@ def get_args():
         action='store_true',
     )
     parser.add_argument(
+        '-M',
+        '--merge',
+        help='Merge contents of all pages before processing',
+        action='store_true',
+    )
+    parser.add_argument(
         '-s',
         '--chunk-size',
         help='Chunk size when splitting transcript, also used to determine whether to split',
@@ -104,7 +110,7 @@ def main():
         needs_splitting = False
     deliver_prompts(
         what=args.what,
-        docs=docs,
+        documents=docs,
         should_be_only_one_doc=True,
         needs_splitting=needs_splitting,
         copy=args.copy,

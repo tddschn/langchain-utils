@@ -86,7 +86,7 @@ def main():
         needs_splitting = False
     deliver_prompts(
         what=what,
-        docs=docs,
+        documents=docs,
         should_be_only_one_doc=True,
         needs_splitting=needs_splitting,
         copy=args.copy,
