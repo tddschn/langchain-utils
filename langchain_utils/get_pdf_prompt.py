@@ -62,6 +62,7 @@ def get_args():
         type=str,
         default=DEFAULT_PDF_WHAT,
     )
+    parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
 
     args = parser.parse_args()
     return args
@@ -102,6 +103,7 @@ def main():
         copy=args.copy,
         chunk_size=args.chunk_size,
         extra_chunk_info_fn=pymupdf_doc_page_info,
+        dry_run=args.dry_run,
     )
 
 

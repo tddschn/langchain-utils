@@ -47,6 +47,8 @@ def get_args():
         default=2000,
     )
 
+    parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
+
     args = parser.parse_args()
     args.youtube_url = args.youtube_url.split('&')[0]
     return args
@@ -82,6 +84,7 @@ def main():
         needs_splitting=needs_splitting,
         copy=args.copy,
         chunk_size=args.chunk_size,
+        dry_run=args.dry_run,
     )
 
 
