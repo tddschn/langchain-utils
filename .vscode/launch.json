@@ -2,6 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "ytprompt on long transcript with edit",
+      "type": "python",
+      "request": "launch",
+      "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/ytprompt",
+      "args": [
+        "https://www.youtube.com/watch?v=Asi6OBdw3rU&list=PLG7HJSuTXv5SOiUFsg4askin23mVOFqmG&index=5",
+        "-e"
+      ]
+    },
+    {
       "name": "pdfprompt dry run",
       "type": "python",
       "request": "launch",
@@ -9,7 +19,7 @@
       "args": ["/Users/tscp/Downloads/2203.06904.pdf", "-n"]
     },
     {
-      "name": "Run urlprompt with VS Code",
+      "name": "urlprompt on wechat article",
       "type": "python",
       "request": "launch",
       "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/urlprompt",
