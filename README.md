@@ -40,7 +40,7 @@ options:
   -M, --merge           Merge contents of all pages before processing (default: False)
   -s chunk_size, --chunk-size chunk_size
                         Chunk size when splitting transcript, also used to determine whether to split (default: 2000)
-  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF content in the prompt (default: the content of a PDF file)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF content in the prompt (default: the content of a webpage)
   -j, --javascript      Use JavaScript to render the page (default: False)
   -n, --dry-run         Dry run (default: False)
 ```
