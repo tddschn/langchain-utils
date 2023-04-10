@@ -87,6 +87,7 @@ def main():
         chunk_size=args.chunk_size,
         extra_chunk_info_fn=url_source_info,
         dry_run=args.dry_run,
+        parts=args.parts,
     )
 
 

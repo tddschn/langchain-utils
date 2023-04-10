@@ -169,7 +169,11 @@ def deliver_prompts(
         splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=chunk_size)
         splitted = splitter.split_documents(documents)
         if parts:
-            print(f'Total number of parts: {len(parts)}', file=sys.stderr)
+            len_splitted = len(splitted)
+            parts = list({part for part in parts if 0 <= part - 1 < len_splitted})
+            print(
+                f'Selecting {len(parts)} parts out of {len_splitted}.', file=sys.stderr
+            )
             print(f'Using parts: {parts}', file=sys.stderr)
             splitted = [splitted[i - 1] for i in parts]
         deliver_multiple_docs(splitted)

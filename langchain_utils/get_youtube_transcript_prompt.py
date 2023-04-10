@@ -59,6 +59,7 @@ def main():
         edit=args.edit,
         chunk_size=args.chunk_size,
         dry_run=args.dry_run,
+        parts=args.parts,
     )
 
 
