@@ -11,7 +11,7 @@ from .utils import (
     deliver_prompts,
     get_word_count,
     deliver_prompts,
-    url_source_info,
+    general_document_source_info,
     save_stdin_to_tempfile,
 )
 from .loaders import load_text
@@ -55,7 +55,7 @@ def main():
 
     args = get_args()
 
-    print(f'Loading webpage from {args.url} ...', file=sys.stderr)
+    print(f'Loading text file(s) from {args.path} ...', file=sys.stderr)
     docs = load_text(args.path)
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
@@ -88,7 +88,7 @@ def main():
         edit=args.edit,
         should_be_only_one_doc=True if num_docs == 1 else False,
         chunk_size=args.chunk_size,
-        extra_chunk_info_fn=url_source_info,
+        extra_chunk_info_fn=general_document_source_info,
         dry_run=args.dry_run,
         parts=args.parts,
     )

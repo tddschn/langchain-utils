@@ -75,10 +75,10 @@ def pymupdf_doc_page_info(document: 'Document') -> str:
         return ''
 
 
-def url_source_info(document: 'Document') -> str:
+def general_document_source_info(document: 'Document') -> str:
     metadata = document.metadata
     if 'source' in metadata:
-        return f', URL: {metadata["source"]}'
+        return f', Source: {metadata["source"]}'
     else:
         return ''
 

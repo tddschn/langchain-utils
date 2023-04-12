@@ -11,7 +11,7 @@ from .utils import (
     deliver_prompts,
     get_word_count,
     deliver_prompts,
-    url_source_info,
+    general_document_source_info,
 )
 from .loaders import load_url
 from .config import DEFAULT_URL_WHAT
@@ -85,7 +85,7 @@ def main():
         edit=args.edit,
         should_be_only_one_doc=True,
         chunk_size=args.chunk_size,
-        extra_chunk_info_fn=url_source_info,
+        extra_chunk_info_fn=general_document_source_info,
         dry_run=args.dry_run,
         parts=args.parts,
     )
