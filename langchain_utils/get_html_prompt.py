@@ -15,7 +15,7 @@ from .utils import (
     save_stdin_to_tempfile,
 )
 from .loaders import load_html
-from .config import DEFAULT_GENERAL_WHAT
+from .config import DEFAULT_HTML_WHAT
 from .utils_argparse import get_get_prompt_base_arg_parser
 
 
@@ -27,7 +27,7 @@ def get_args():
     )
 
     parser.add_argument(
-        'path', help='Paths to the html files, or stdin if not provided', metavar='Path', type=str, default=None, nargs='*'
+        'path', help='Paths to the html files, or stdin if not provided', metavar='PATH', type=str, default=None, nargs='*'
     )
 
     parser.add_argument(
@@ -35,7 +35,7 @@ def get_args():
         '--what',
         help='Initial knowledge you want to insert before the PDF content in the prompt',
         type=str,
-        default=DEFAULT_GENERAL_WHAT,
+        default=DEFAULT_HTML_WHAT,
     )
     parser.add_argument(
         '-M',
@@ -56,7 +56,7 @@ def main():
     args = get_args()
 
     print(f'Loading html file(s) from {args.path} ...', file=sys.stderr)
-    docs = load_html(args.path)
+    docs = [load_html(p)[0] for p in args.path]
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))

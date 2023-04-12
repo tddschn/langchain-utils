@@ -8,6 +8,8 @@ LangChain Utilities
     - [`urlprompt`](#urlprompt)
     - [`pdfprompt`](#pdfprompt)
     - [`ytprompt`](#ytprompt)
+    - [`textprompt`](#textprompt)
+    - [`htmlprompt`](#htmlprompt)
   - [Installation](#installation)
     - [pipx](#pipx)
     - [pip](#pip)
@@ -116,7 +118,82 @@ options:
 
 ```
 
+### `textprompt`
 
+```
+$ textprompt --help
+
+usage: textprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                  [-P PARTS [PARTS ...]] [-n] [-w WHAT] [-M]
+                  [PATH ...]
+
+Get a prompt from text files
+
+positional arguments:
+  PATH                  Paths to the text files, or stdin if not provided
+                        (default: None)
+
+options:
+  -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
+  -c, --copy            Copy the prompt to clipboard (default: False)
+  -e, --edit            Edit the prompt and copy manually (default: False)
+  -m model, --model model
+                        Model to use (default: gpt-3.5-turbo)
+  -S, --split           Split the prompt into multiple parts (default: False)
+  -s chunk_size, --chunk-size chunk_size
+                        Chunk size when splitting transcript, also used to
+                        determine whether to split (default: 2000)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -n, --dry-run         Dry run (default: False)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
+                        content in the prompt (default: the content of a
+                        document)
+  -M, --merge           Merge contents of all pages before processing
+                        (default: False)
+```
+
+
+### `htmlprompt`
+
+```
+$ htmlprompt --help
+
+usage: htmlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                  [-P PARTS [PARTS ...]] [-n] [-w WHAT] [-M]
+                  [PATH ...]
+
+Get a prompt from html files
+
+positional arguments:
+  PATH                  Paths to the html files, or stdin if not provided
+                        (default: None)
+
+options:
+  -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
+  -c, --copy            Copy the prompt to clipboard (default: False)
+  -e, --edit            Edit the prompt and copy manually (default: False)
+  -m model, --model model
+                        Model to use (default: gpt-3.5-turbo)
+  -S, --split           Split the prompt into multiple parts (default: False)
+  -s chunk_size, --chunk-size chunk_size
+                        Chunk size when splitting transcript, also used to
+                        determine whether to split (default: 2000)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -n, --dry-run         Dry run (default: False)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
+                        content in the prompt (default: the text content of a
+                        html file)
+  -M, --merge           Merge contents of all pages before processing
+                        (default: False)
+
+
+```
 ## Installation
 
 ### pipx

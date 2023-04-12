@@ -37,6 +37,7 @@ pymupdf = "^1.21.1"
 # must use this version of unstructured, or it won't be able to parse certain htmls
 unstructured = "0.5.2"
 selenium = "^4.8.3"
+bs4 = "^0.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

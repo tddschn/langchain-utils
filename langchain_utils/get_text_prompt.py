@@ -27,7 +27,7 @@ def get_args():
     )
 
     parser.add_argument(
-        'path', help='Paths to the text files, or stdin if not provided', metavar='Path', type=str, default=None, nargs='*'
+        'path', help='Paths to the text files, or stdin if not provided', metavar='PATH', type=str, default=None, nargs='*'
     )
 
     parser.add_argument(
@@ -56,7 +56,7 @@ def main():
     args = get_args()
 
     print(f'Loading text file(s) from {args.path} ...', file=sys.stderr)
-    docs = load_text(args.path)
+    docs = [load_text(p)[0] for p in args.path]
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))
