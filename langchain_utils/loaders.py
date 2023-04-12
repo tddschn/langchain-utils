@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from langchain.docstore.document import Document
@@ -57,5 +57,15 @@ def load_html(path: str, open_encoding: str | None = None, bs_kwargs: dict | Non
     from langchain.document_loaders import BSHTMLLoader
 
     loader = BSHTMLLoader(path, open_encoding=open_encoding, bs_kwargs=bs_kwargs)
+    docs = loader.load()
+    return docs
+
+UnstructuredLoadingMode = Literal["single", "elements"] 
+
+def load_word(path: str, mode: UnstructuredLoadingMode = "single") -> list['Document']:
+    # UnstructuredWordDocumentLoader
+    from langchain.document_loaders import UnstructuredWordDocumentLoader
+
+    loader = UnstructuredWordDocumentLoader(path, mode=mode)
     docs = loader.load()
     return docs
