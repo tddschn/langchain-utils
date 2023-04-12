@@ -40,7 +40,7 @@ def get_args():
     parser.add_argument(
         '-l',
         '--page-slice',
-        help='Use Python list slice to select page numbers',
+        help='Use Python slice syntax to select page numbers (e.g. 1:3, 1:10:2, etc.)',
         type=str,
         default=None,
     )

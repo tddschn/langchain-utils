@@ -58,8 +58,7 @@ options:
 ```
 $ pdfprompt --help
 
-usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-n]
-                 [-p PAGES [PAGES ...]] [-M] [-w WHAT]
+usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-P PARTS [PARTS ...]] [-n] [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -76,17 +75,16 @@ options:
                         Model to use (default: gpt-3.5-turbo)
   -S, --split           Split the prompt into multiple parts (default: False)
   -s chunk_size, --chunk-size chunk_size
-                        Chunk size when splitting transcript, also used to
-                        determine whether to split (default: 2000)
+                        Chunk size when splitting transcript, also used to determine whether to split (default: 2000)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents (default: None)
   -n, --dry-run         Dry run (default: False)
   -p PAGES [PAGES ...], --pages PAGES [PAGES ...]
                         Only include specified page numbers (default: None)
-  -M, --merge           Merge contents of all pages before processing
-                        (default: False)
-  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
-                        content in the prompt (default: the content of a PDF
-                        file)
-
+  -l PAGE_SLICE, --page-slice PAGE_SLICE
+                        Use Python slice syntax to select page numbers (e.g. 1:3, 1:10:2, etc.) (default: None)
+  -M, --merge           Merge contents of all pages before processing (default: False)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF content in the prompt (default: the content of a PDF file)
 
 ```
 
