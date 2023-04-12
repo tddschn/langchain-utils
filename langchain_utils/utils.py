@@ -14,6 +14,41 @@ if TYPE_CHECKING:
     from langchain.docstore.document import Document
 
 
+def convert_str_slice_notation_to_slice(str_slice: str) -> slice:
+    # '1:3' -> slice(1, 3)
+    # '1:' -> slice(1, None)
+    # ':3' -> slice(None, 3)
+    # ':' -> slice(None, None)
+    # '3' -> slice(3)
+    # '1:8:2' -> slice(1, 8, 2)
+    # start
+    def int_or_none(s: str) -> int | None:
+        try:
+            return int(s)
+        except ValueError:
+            return None
+
+    return slice(*list(map(int_or_none, str_slice.split(':'))))
+    # if str_slice.startswith(':'):
+    #     start = None
+    # else:
+    #     start = int(str_slice.split(':')[0])
+    # # stop
+    # if str_slice.endswith(':'):
+    #     stop = None
+    # else:
+    #     try:
+    #         stop = int(str_slice.split(':')[1])
+    #     except IndexError:
+    #         stop = None
+    # # step
+    # if len(str_slice.split(':')) == 3:
+    #     step = int(str_slice.split(':')[-1])
+    # else:
+    #     step = None
+    # return slice(start, stop, step)
+
+
 def get_token_count(s: str, model_name: str = 'gpt-3.5-turbo') -> int:
     from tiktoken import encoding_for_model
 

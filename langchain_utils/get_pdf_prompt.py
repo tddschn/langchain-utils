@@ -12,6 +12,7 @@ from .utils import (
     get_word_count,
     deliver_prompts,
     pymupdf_doc_page_info,
+    convert_str_slice_notation_to_slice,
 )
 from .loaders import load_pdf
 from .config import DEFAULT_PDF_WHAT
@@ -34,6 +35,13 @@ def get_args():
         help='Only include specified page numbers',
         type=int,
         nargs='+',
+        default=None,
+    )
+    parser.add_argument(
+        '-l',
+        '--page-slice',
+        help='Use Python list slice to select page numbers',
+        type=str,
         default=None,
     )
     parser.add_argument(
@@ -62,8 +70,17 @@ def main():
     print(f'Loading PDF from {args.pdf_path} ...', file=sys.stderr)
     docs = load_pdf(args.pdf_path)
     num_whole_pdf_pages = len(docs)
+    if args.pages and args.page_slice:
+        print(
+            'Please specify either --pages or --page-slice, not both',
+            file=sys.stderr,
+        )
+        sys.exit(1)
     if args.pages:
         args.pages = [p for p in args.pages if p <= num_whole_pdf_pages and p > 0]
+        docs = [doc for doc in docs if doc.metadata['page_number'] in args.pages]
+    if args.page_slice:
+        args.pages = list(x + 1 for x in list(range(num_whole_pdf_pages))[convert_str_slice_notation_to_slice(args.page_slice)])
         docs = [doc for doc in docs if doc.metadata['page_number'] in args.pages]
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
