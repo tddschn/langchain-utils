@@ -46,7 +46,7 @@ def get_args():
 
     args = parser.parse_args()
     if not args.path:
-        args.path = save_stdin_to_tempfile()
+        args.path = [save_stdin_to_tempfile()]
     return args
 
 
