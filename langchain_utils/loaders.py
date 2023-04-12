@@ -45,3 +45,17 @@ def load_url(urls: list[str], javascript: bool = False) -> list['Document']:
     docs = loader.load()
 
     return docs
+
+def load_text(path: str, encoding: str | None = None) -> list['Document']:
+    from langchain.document_loaders import TextLoader
+
+    loader = TextLoader(path, encoding=encoding)
+    docs = loader.load()
+    return docs
+
+def load_html(path: str, open_encoding: str | None = None, bs_kwargs: dict | None = None) -> list['Document']:
+    from langchain.document_loaders import BSHTMLLoader
+
+    loader = BSHTMLLoader(path, open_encoding=open_encoding, bs_kwargs=bs_kwargs)
+    docs = loader.load()
+    return docs

@@ -2,3 +2,4 @@
 
 DEFAULT_PDF_WHAT = 'the content of a PDF file'
 DEFAULT_URL_WHAT = 'the content of a webpage'
+DEFAULT_GENERAL_WHAT = 'the content of a document'

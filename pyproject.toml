@@ -16,6 +16,8 @@ get-youtube-transcript-prompt = "langchain_utils.get_youtube_transcript_prompt:m
 ytprompt = "langchain_utils.get_youtube_transcript_prompt:main"
 get-url-prompt = "langchain_utils.get_url_prompt:main"
 urlprompt = "langchain_utils.get_url_prompt:main"
+get-text-prompt = "langchain_utils.get_text_prompt:main"
+textprompt = "langchain_utils.get_text_prompt:main"
 get-pdf-prompt = "langchain_utils.get_pdf_prompt:main"
 pdfprompt = "langchain_utils.get_pdf_prompt:main"
 

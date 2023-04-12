@@ -1,3 +1,4 @@
+BSHTML
 docstore
 KHTML
 langchain
