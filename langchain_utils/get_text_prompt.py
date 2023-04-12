@@ -13,6 +13,7 @@ from .utils import (
     deliver_prompts,
     general_document_source_info,
     save_stdin_to_tempfile,
+    save_clipboard_to_tempfile,
 )
 from .loaders import load_text
 from .config import DEFAULT_GENERAL_WHAT
@@ -31,6 +32,10 @@ def get_args():
     )
 
     parser.add_argument(
+        '-C', '--from-clipboard', help='Load text from clipboard', action='store_true'
+    )
+
+    parser.add_argument(
         '-w',
         '--what',
         help='Initial knowledge you want to insert before the PDF content in the prompt',
@@ -45,7 +50,9 @@ def get_args():
     )
 
     args = parser.parse_args()
-    if not args.path:
+    if args.from_clipboard:
+        args.path = [save_clipboard_to_tempfile()]
+    elif not args.path:
         args.path = [save_stdin_to_tempfile()]
     return args
 

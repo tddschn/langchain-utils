@@ -241,3 +241,15 @@ def save_stdin_to_tempfile() -> str:
             shutil.copyfileobj(sys.stdin, f)
         temp_file_path = temp_file.name
     return temp_file_path
+
+def save_clipboard_to_tempfile() -> str:
+    # create a temp file and save stdin to it, and return the tempfile path
+    import tempfile
+    import pyperclip
+    import sys
+
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        with open(temp_file.name, 'w') as f:
+            f.write(pyperclip.paste())
+        temp_file_path = temp_file.name
+    return temp_file_path

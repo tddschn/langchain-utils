@@ -124,7 +124,7 @@ options:
 $ textprompt --help
 
 usage: textprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-n] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from text files
@@ -148,11 +148,13 @@ options:
                         Parts to select in the processes list of Documents
                         (default: None)
   -n, --dry-run         Dry run (default: False)
+  -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a
                         document)
   -M, --merge           Merge contents of all pages before processing
                         (default: False)
+
 ```
 
 
@@ -162,7 +164,7 @@ options:
 $ htmlprompt --help
 
 usage: htmlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-n] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from html files
@@ -186,12 +188,12 @@ options:
                         Parts to select in the processes list of Documents
                         (default: None)
   -n, --dry-run         Dry run (default: False)
+  -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the text content of a
                         html file)
   -M, --merge           Merge contents of all pages before processing
                         (default: False)
-
 
 ```
 ## Installation
