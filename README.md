@@ -19,6 +19,10 @@ LangChain Utilities
 
 ## Prompt generation using LangChain document loaders
 
+Do you find yourself frequently copy-pasting texts from the web / PDFs / other documents into ChatGPT? 
+
+If yes, these tools are for you!
+
 Optimized to feed into a chat interface (like ChatGPT) manually in one or multiple (to get around context length limits) goes.
 
 Basically, the prompts generated look like this:
