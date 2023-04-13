@@ -1,5 +1,6 @@
 BSHTML
 docstore
+htmlprompt
 KHTML
 langchain
 pdfprompt
@@ -7,6 +8,7 @@ pipx
 pymupdf
 pyperclip
 startfile
+textprompt
 tiktoken
 urlprompt
 Xinyuan

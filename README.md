@@ -5,6 +5,7 @@ LangChain Utilities
 
 - [langchain-utils](#langchain-utils)
   - [Prompt generation using LangChain document loaders](#prompt-generation-using-langchain-document-loaders)
+    - [Demos](#demos)
     - [`urlprompt`](#urlprompt)
     - [`pdfprompt`](#pdfprompt)
     - [`ytprompt`](#ytprompt)
@@ -19,6 +20,15 @@ LangChain Utilities
 ## Prompt generation using LangChain document loaders
 
 Optimized to feed into a chat interface (like ChatGPT) manually in one or multiple (to get around context length limits) goes.
+
+### Demos
+
+- Loading `https://github.com/tddschn/langchain-utils` and copy to clipboard:
+
+<!-- create a video tag with https://user-images.githubusercontent.com/45612704/231729153-341bd962-28cc-40a3-af8b-91e038ccaf6c.mp4 -->
+
+<video src="https://user-images.githubusercontent.com/45612704/231729153-341bd962-28cc-40a3-af8b-91e038ccaf6c.mp4" controls width="100%"></video>
+
 
 ### `urlprompt`
 
