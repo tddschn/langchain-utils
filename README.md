@@ -21,6 +21,22 @@ LangChain Utilities
 
 Optimized to feed into a chat interface (like ChatGPT) manually in one or multiple (to get around context length limits) goes.
 
+Basically, the prompts generated look like this:
+
+```python
+REPLY_OK_IF_YOU_READ_TEMPLATE = '''
+Below is {what}, reply "OK" if you read:
+
+"""
+{content}
+"""
+'''.strip()
+```
+
+You can feed it directly to a chat interface like ChatGPT, and ask follow up questions about it.
+
+See [`prompts.py`](./langchain_utils/prompts.py) for other variations.
+
 ### Demos
 
 - Loading `https://github.com/tddschn/langchain-utils` and copy to clipboard:
@@ -29,6 +45,12 @@ Optimized to feed into a chat interface (like ChatGPT) manually in one or multip
 
 <video src="https://user-images.githubusercontent.com/45612704/231729153-341bd962-28cc-40a3-af8b-91e038ccaf6c.mp4" controls width="100%"></video>
 
+
+- Load 3 pages of a pdf file, open each part for inspection before copying, and optionally merge 3 pages into 2 prompts that wouldn't go over the `gpt-3.5-turbo`'s context length limit.
+
+<!-- for https://user-images.githubusercontent.com/45612704/231731553-63cf3cef-a210-4761-8ca3-dd47bedc3393.mp4 -->
+
+<video src="https://user-images.githubusercontent.com/45612704/231731553-63cf3cef-a210-4761-8ca3-dd47bedc3393.mp4" controls width="100%"></video>
 
 ### `urlprompt`
 
