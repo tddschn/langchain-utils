@@ -12,6 +12,8 @@ from .utils import (
     get_word_count,
     deliver_prompts,
     general_document_source_info,
+    get_percentage_non_ascii,
+    get_token_count,
 )
 from .loaders import load_word, UnstructuredLoadingMode
 from .config import DEFAULT_GENERAL_WHAT
@@ -21,15 +23,16 @@ from .utils_argparse import get_get_prompt_base_arg_parser
 def get_args():
     """Get command-line arguments"""
 
-    parser = get_get_prompt_base_arg_parser(
-        description='Get a prompt from text files'
-    )
+    parser = get_get_prompt_base_arg_parser(description='Get a prompt from text files')
 
     parser.add_argument(
-        'word_path', help='Path to the Word document', metavar='Word Document Path', type=str
+        'word_path',
+        help='Path to the Word document',
+        metavar='Word Document Path',
+        type=str,
     )
     parser.add_argument(
-        '-u', '--unstructured-loading-mode', type=str, choices=UnstructuredLoadingMode.__args__, default='single', help='Unstructured loading mode' # type: ignore
+        '-u', '--unstructured-loading-mode', type=str, choices=UnstructuredLoadingMode.__args__, default='single', help='Unstructured loading mode'  # type: ignore
     )
 
     parser.add_argument(
@@ -60,20 +63,29 @@ def main():
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))
+    char_count = len(all_text)
     print(
-        f'Loaded {len(docs)} Documents. Word count: {word_count} Char count: {len(all_text)}',
+        f'Loaded {len(docs)} Documents. Word count: {word_count} Char count: {char_count}',
         file=sys.stderr,
     )
+    if args.print_percentage_non_ascii:
+        print(
+            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            file=sys.stderr,
+        )
+        token_count = get_token_count(all_text)
+        print(f'Token count: {token_count}', file=sys.stderr)
+        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
+        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        return
     if args.merge:
         from langchain.docstore.document import Document
 
         merged = Document(
             page_content=all_text,
-            metadata={
-                k: v for k, v in docs[0].metadata.items() if k in {'source'}
-            },
+            metadata={k: v for k, v in docs[0].metadata.items() if k in {'source'}},
         )
-    documents = [merged] if args.merge else docs # type: ignore
+    documents = [merged] if args.merge else docs  # type: ignore
     num_docs = len(documents)
     if args.split or word_count > args.chunk_size * 0.75:
         needs_splitting = True
@@ -81,7 +93,7 @@ def main():
         needs_splitting = False
     deliver_prompts(
         what=args.what,
-        documents=documents, # type: ignore
+        documents=documents,  # type: ignore
         needs_splitting=needs_splitting,
         copy=args.copy,
         edit=args.edit,

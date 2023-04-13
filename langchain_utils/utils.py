@@ -82,6 +82,7 @@ def html_source_info(document: 'Document') -> str:
     else:
         return ''
 
+
 def general_document_source_info(document: 'Document') -> str:
     metadata = document.metadata
     if 'source' in metadata:
@@ -242,6 +243,7 @@ def save_stdin_to_tempfile() -> str:
         temp_file_path = temp_file.name
     return temp_file_path
 
+
 def save_clipboard_to_tempfile() -> str:
     # create a temp file and save stdin to it, and return the tempfile path
     import tempfile
@@ -253,3 +255,7 @@ def save_clipboard_to_tempfile() -> str:
             f.write(pyperclip.paste())
         temp_file_path = temp_file.name
     return temp_file_path
+
+
+def get_percentage_non_ascii(s: str) -> float:
+    return sum(1 for c in s if ord(c) >= 128) / len(s)

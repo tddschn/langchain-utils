@@ -50,5 +50,12 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
         nargs='+',
         default=None,
     )
+
+    parser.add_argument(
+        '--print-percentage-non-ascii',
+        help='Print percentage of non-ascii characters',
+        action='store_true',
+    )
+
     parser.add_argument('-n', '--dry-run', help='Dry run', action='store_true')
     return parser
