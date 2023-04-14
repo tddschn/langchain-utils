@@ -6,16 +6,16 @@ Date   : 2023-04-09
 
 import sys
 
-from . import __version__
-from .utils import (
+from langchain_utils import __version__
+from langchain_utils.utils import (
     deliver_prompts,
     get_word_count,
     deliver_prompts,
     general_document_source_info,
 )
-from .loaders import load_url
-from .config import DEFAULT_URL_WHAT
-from .utils_argparse import get_get_prompt_base_arg_parser
+from langchain_utils.loaders import load_url
+from langchain_utils.config import DEFAULT_URL_WHAT
+from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
 
 
 def get_args():
