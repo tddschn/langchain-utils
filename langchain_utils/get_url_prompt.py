@@ -12,6 +12,7 @@ from langchain_utils.utils import (
     get_word_count,
     deliver_prompts,
     general_document_source_info,
+    get_default_chunk_size,
 )
 from langchain_utils.loaders import load_url
 from langchain_utils.config import DEFAULT_URL_WHAT
@@ -47,6 +48,7 @@ def get_args():
     )
 
     args = parser.parse_args()
+    args.chunk_size = get_default_chunk_size(args.model)
     return args
 
 

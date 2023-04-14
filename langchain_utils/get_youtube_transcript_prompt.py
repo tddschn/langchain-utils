@@ -8,7 +8,13 @@ Purpose: Get a prompt consisting Title and Transcript of a YouTube Video
 import sys
 
 from . import __version__
-from .utils import deliver_prompts, format_date, get_word_count, deliver_prompts
+from .utils import (
+    deliver_prompts,
+    format_date,
+    get_word_count,
+    deliver_prompts,
+    get_default_chunk_size,
+)
 from .loaders import load_youtube_url
 from .utils_argparse import get_get_prompt_base_arg_parser
 
@@ -24,6 +30,7 @@ def get_args():
 
     args = parser.parse_args()
     args.youtube_url = args.youtube_url.split('&')[0]
+    args.chunk_size = get_default_chunk_size(args.model)
     return args
 
 

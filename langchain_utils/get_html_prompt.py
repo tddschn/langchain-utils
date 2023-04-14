@@ -14,6 +14,7 @@ from langchain_utils.utils import (
     html_source_info,
     save_stdin_to_tempfile,
     save_clipboard_to_tempfile,
+    get_default_chunk_size,
 )
 from langchain_utils.loaders import load_html
 from langchain_utils.config import DEFAULT_HTML_WHAT
@@ -57,6 +58,7 @@ def get_args():
         args.path = [save_clipboard_to_tempfile()]
     elif not args.path:
         args.path = [save_stdin_to_tempfile()]
+    args.chunk_size = get_default_chunk_size(args.model)
     return args
 
 

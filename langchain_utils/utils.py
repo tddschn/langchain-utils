@@ -259,3 +259,11 @@ def save_clipboard_to_tempfile() -> str:
 
 def get_percentage_non_ascii(s: str) -> float:
     return sum(1 for c in s if ord(c) >= 128) / len(s)
+
+
+def get_default_chunk_size(model: str | None = None) -> int:
+    from langchain_utils.config import MODEL_TO_CONTEXT_LENGTH_MAPPING, DEFAULT_MODEL
+
+    if model not in MODEL_TO_CONTEXT_LENGTH_MAPPING:
+        model = DEFAULT_MODEL
+    return MODEL_TO_CONTEXT_LENGTH_MAPPING[model] // 2

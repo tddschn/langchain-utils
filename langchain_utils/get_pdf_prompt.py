@@ -13,6 +13,7 @@ from langchain_utils.utils import (
     deliver_prompts,
     pymupdf_doc_page_info,
     convert_str_slice_notation_to_slice,
+    get_default_chunk_size,
 )
 from langchain_utils.loaders import load_pdf
 from langchain_utils.config import DEFAULT_PDF_WHAT
@@ -59,6 +60,7 @@ def get_args():
     )
 
     args = parser.parse_args()
+    args.chunk_size = get_default_chunk_size(args.model)
     return args
 
 

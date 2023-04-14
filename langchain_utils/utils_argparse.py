@@ -1,5 +1,6 @@
 import argparse
-from . import __version__
+from langchain_utils import __version__
+from langchain_utils.config import MODEL_TO_CONTEXT_LENGTH_MAPPING, DEFAULT_MODEL
 
 
 def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
@@ -26,7 +27,7 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
         help='Model to use',
         metavar='model',
         type=str,
-        default='gpt-3.5-turbo',
+        default=DEFAULT_MODEL,
     )
     parser.add_argument(
         '-S',
@@ -37,10 +38,13 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
     parser.add_argument(
         '-s',
         '--chunk-size',
-        help='Chunk size when splitting transcript, also used to determine whether to split',
+        help='Chunk size when splitting transcript, also used to determine whether to split, defaults to 1/2 of the context length limit of the model',
         metavar='chunk_size',
         type=int,
-        default=2000,
+        # default to 1/2 of the context length limit
+        # default=MODEL_TO_CONTEXT_LENGTH_MAPPING[DEFAULT_MODEL] // 2,
+        # default=2000,
+        default=None,
     )
     parser.add_argument(
         '-P',

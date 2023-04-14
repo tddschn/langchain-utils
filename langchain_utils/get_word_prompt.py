@@ -14,6 +14,7 @@ from langchain_utils.utils import (
     general_document_source_info,
     get_percentage_non_ascii,
     get_token_count,
+    get_default_chunk_size,
 )
 from langchain_utils.loaders import load_word, UnstructuredLoadingMode
 from langchain_utils.config import DEFAULT_GENERAL_WHAT
@@ -50,6 +51,7 @@ def get_args():
     )
 
     args = parser.parse_args()
+    args.chunk_size = get_default_chunk_size(args.model)
     return args
 
 
