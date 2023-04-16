@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING, Callable, NoReturn
 import sys
 from .prompts import (
+    RAW_TRIPLE_QUOTES_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED,
@@ -130,11 +131,16 @@ def deliver_prompts(
     extra_chunk_info_fn: Callable[['Document'], str] = lambda doc: '',
     dry_run: bool = False,
     parts: list[int] | None = None,
+    raw_triple_quotes: bool = False,
 ):
     from langchain.prompts import PromptTemplate
 
     def deliver_single_doc(document: 'Document'):
-        prompt = PromptTemplate.from_template(REPLY_OK_IF_YOU_READ_TEMPLATE)
+        if raw_triple_quotes:
+            template = RAW_TRIPLE_QUOTES_TEMPLATE
+        else:
+            template = REPLY_OK_IF_YOU_READ_TEMPLATE
+        prompt = PromptTemplate.from_template(template)
         content = document.page_content
         formatted_prompt = prompt.format(what=what, content=content)
 
@@ -170,7 +176,10 @@ def deliver_prompts(
             print(f'Please copy the prompts after each edits.', file=sys.stderr)
         for i, doc in enumerate(documents):
             num_chunks = len(documents)
-            if i == 0:
+            if raw_triple_quotes:
+                template = RAW_TRIPLE_QUOTES_TEMPLATE
+                prompt = PromptTemplate.from_template(template)
+            elif i == 0:
                 prompt = PromptTemplate.from_template(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST
                 )

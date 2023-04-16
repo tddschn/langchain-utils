@@ -56,6 +56,13 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        '-r',
+        '--raw',
+        help='Wraps the content in triple quotes with no extra text',
+        action='store_true',
+    )
+
+    parser.add_argument(
         '--print-percentage-non-ascii',
         help='Print percentage of non-ascii characters',
         action='store_true',

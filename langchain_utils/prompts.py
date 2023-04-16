@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+RAW_TRIPLE_QUOTES_TEMPLATE = '''
+"""
+{content}
+"""
+'''.strip()
+
 REPLY_OK_IF_YOU_READ_TEMPLATE = '''
 Below is {what}, reply "OK" if you read:
 

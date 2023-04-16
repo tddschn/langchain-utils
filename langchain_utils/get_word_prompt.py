@@ -105,6 +105,7 @@ def main():
         chunk_size=args.chunk_size,
         extra_chunk_info_fn=general_document_source_info,
         dry_run=args.dry_run,
+        raw_triple_quotes=args.raw,
         parts=args.parts,
     )
 

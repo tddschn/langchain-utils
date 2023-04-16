@@ -66,6 +66,7 @@ def main():
         edit=args.edit,
         chunk_size=args.chunk_size,
         dry_run=args.dry_run,
+        raw_triple_quotes=args.raw,
         parts=args.parts,
     )
 
