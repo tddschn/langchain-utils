@@ -30,7 +30,7 @@ pdfprompt = "langchain_utils.get_pdf_prompt:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-langchain = "^0.0.135"
+langchain = "^0.0.141"
 youtube-transcript-api = "^0.5.0"
 pytube = "^12.1.3"
 pyperclip = "^1.8.2"
