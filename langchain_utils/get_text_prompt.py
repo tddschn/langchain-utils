@@ -101,7 +101,9 @@ def main():
         )
     documents = [merged] if args.merge else docs  # type: ignore
     num_docs = len(documents)
-    if args.split or word_count > args.chunk_size * 0.75:
+    if args.no_split:
+        needs_splitting = False
+    if word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False

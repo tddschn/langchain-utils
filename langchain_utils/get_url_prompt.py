@@ -75,7 +75,9 @@ def main():
             #     k: v for k, v in docs[0].metadata.items() if k not in {'page_number'}
             # },
         )
-    if args.split or word_count > args.chunk_size * 0.75:
+    if args.no_split:
+        needs_splitting = False
+    if word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False

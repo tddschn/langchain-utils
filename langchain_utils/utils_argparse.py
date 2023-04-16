@@ -31,8 +31,8 @@ def get_get_prompt_base_arg_parser(description: str) -> argparse.ArgumentParser:
     )
     parser.add_argument(
         '-S',
-        '--split',
-        help='Split the prompt into multiple parts',
+        '--no-split',
+        help='Do not split the prompt into multiple parts (use this if the model has a really large context size)',
         action='store_true',
     )
     parser.add_argument(

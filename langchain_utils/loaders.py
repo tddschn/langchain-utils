@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 def load_youtube_url(youtube_url: str) -> list['Document']:
     from langchain.document_loaders import YoutubeLoader
 
-    loader = YoutubeLoader.from_youtube_channel(youtube_url, add_video_info=True)
+    loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=True)
     docs = loader.load()
     return docs
 
@@ -46,6 +46,7 @@ def load_url(urls: list[str], javascript: bool = False) -> list['Document']:
 
     return docs
 
+
 def load_text(path: str, encoding: str | None = None) -> list['Document']:
     from langchain.document_loaders import TextLoader
 
@@ -53,14 +54,19 @@ def load_text(path: str, encoding: str | None = None) -> list['Document']:
     docs = loader.load()
     return docs
 
-def load_html(path: str, open_encoding: str | None = None, bs_kwargs: dict | None = None) -> list['Document']:
+
+def load_html(
+    path: str, open_encoding: str | None = None, bs_kwargs: dict | None = None
+) -> list['Document']:
     from langchain.document_loaders import BSHTMLLoader
 
     loader = BSHTMLLoader(path, open_encoding=open_encoding, bs_kwargs=bs_kwargs)
     docs = loader.load()
     return docs
 
-UnstructuredLoadingMode = Literal["single", "elements"] 
+
+UnstructuredLoadingMode = Literal["single", "elements"]
+
 
 def load_word(path: str, mode: UnstructuredLoadingMode = "single") -> list['Document']:
     # UnstructuredWordDocumentLoader
