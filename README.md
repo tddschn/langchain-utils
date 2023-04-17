@@ -2,7 +2,6 @@
 
 LangChain Utilities
 
-
 - [langchain-utils](#langchain-utils)
   - [Prompt generation using LangChain document loaders](#prompt-generation-using-langchain-document-loaders)
     - [Demos](#demos)
@@ -16,10 +15,9 @@ LangChain Utilities
     - [pip](#pip)
   - [Develop](#develop)
 
-
 ## Prompt generation using LangChain document loaders
 
-Do you find yourself frequently copy-pasting texts from the web / PDFs / other documents into ChatGPT? 
+Do you find yourself frequently copy-pasting texts from the web / PDFs / other documents into ChatGPT?
 
 If yes, these tools are for you!
 
@@ -49,7 +47,6 @@ See [`prompts.py`](./langchain_utils/prompts.py) for other variations.
 
 <video src="https://user-images.githubusercontent.com/45612704/231729153-341bd962-28cc-40a3-af8b-91e038ccaf6c.mp4" controls width="100%"></video>
 
-
 - Load 3 pages of a pdf file, open each part for inspection before copying, and optionally merge 3 pages into 2 prompts that wouldn't go over the `gpt-3.5-turbo`'s context length limit with langchain's `TokenTextSplitter`.
 
 <!-- for https://user-images.githubusercontent.com/45612704/231731553-63cf3cef-a210-4761-8ca3-dd47bedc3393.mp4 -->
@@ -61,8 +58,9 @@ See [`prompts.py`](./langchain_utils/prompts.py) for other variations.
 ```
 $ urlprompt --help
 
-usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-n]
-                 [-w WHAT] [-M] [-j]
+usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                 [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
+                 [-n] [-w WHAT] [-M] [-j]
                  URL
 
 Get a prompt consisting the text content of a webpage
@@ -77,10 +75,21 @@ options:
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
                         Model to use (default: gpt-3.5-turbo)
-  -S, --split           Split the prompt into multiple parts (default: False)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
   -s chunk_size, --chunk-size chunk_size
                         Chunk size when splitting transcript, also used to
-                        determine whether to split (default: 2000)
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
   -n, --dry-run         Dry run (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a
@@ -90,13 +99,14 @@ options:
   -j, --javascript      Use JavaScript to render the page (default: False)
 
 ```
-
 ### `pdfprompt`
 
 ```
 $ pdfprompt --help
 
-usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-P PARTS [PARTS ...]] [-n] [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT]
+usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                 [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
+                 [-n] [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -111,27 +121,42 @@ options:
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
                         Model to use (default: gpt-3.5-turbo)
-  -S, --split           Split the prompt into multiple parts (default: False)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
   -s chunk_size, --chunk-size chunk_size
-                        Chunk size when splitting transcript, also used to determine whether to split (default: 2000)
+                        Chunk size when splitting transcript, also used to
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
   -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
-                        Parts to select in the processes list of Documents (default: None)
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
   -n, --dry-run         Dry run (default: False)
   -p PAGES [PAGES ...], --pages PAGES [PAGES ...]
                         Only include specified page numbers (default: None)
   -l PAGE_SLICE, --page-slice PAGE_SLICE
-                        Use Python slice syntax to select page numbers (e.g. 1:3, 1:10:2, etc.) (default: None)
-  -M, --merge           Merge contents of all pages before processing (default: False)
-  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF content in the prompt (default: the content of a PDF file)
+                        Use Python slice syntax to select page numbers (e.g.
+                        1:3, 1:10:2, etc.) (default: None)
+  -M, --merge           Merge contents of all pages before processing
+                        (default: False)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
+                        content in the prompt (default: the content of a PDF
+                        file)
 
 ```
-
 ### `ytprompt`
 
 ```
 $ ytprompt --help
 
-usage: ytprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size] [-n]
+usage: ytprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
+                [-n]
                 YouTube URL
 
 Get a prompt consisting Title and Transcript of a YouTube Video
@@ -146,21 +171,32 @@ options:
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
                         Model to use (default: gpt-3.5-turbo)
-  -S, --split           Split the prompt into multiple parts (default: False)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
   -s chunk_size, --chunk-size chunk_size
                         Chunk size when splitting transcript, also used to
-                        determine whether to split (default: 2000)
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
   -n, --dry-run         Dry run (default: False)
 
 ```
-
 ### `textprompt`
 
 ```
 $ textprompt --help
 
 usage: textprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-n] [-C] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
+                  [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from text files
@@ -176,13 +212,21 @@ options:
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
                         Model to use (default: gpt-3.5-turbo)
-  -S, --split           Split the prompt into multiple parts (default: False)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
   -s chunk_size, --chunk-size chunk_size
                         Chunk size when splitting transcript, also used to
-                        determine whether to split (default: 2000)
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
   -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
                         Parts to select in the processes list of Documents
                         (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
   -n, --dry-run         Dry run (default: False)
   -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
@@ -192,15 +236,14 @@ options:
                         (default: False)
 
 ```
-
-
 ### `htmlprompt`
 
 ```
 $ htmlprompt --help
 
 usage: htmlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-n] [-C] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
+                  [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from html files
@@ -216,13 +259,21 @@ options:
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
                         Model to use (default: gpt-3.5-turbo)
-  -S, --split           Split the prompt into multiple parts (default: False)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
   -s chunk_size, --chunk-size chunk_size
                         Chunk size when splitting transcript, also used to
-                        determine whether to split (default: 2000)
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
   -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
                         Parts to select in the processes list of Documents
                         (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
   -n, --dry-run         Dry run (default: False)
   -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
@@ -232,6 +283,7 @@ options:
                         (default: False)
 
 ```
+
 ## Installation
 
 ### pipx
@@ -247,7 +299,6 @@ $ pipx install langchain-utils
 ```
 $ pip install langchain-utils
 ```
-
 
 ## Develop
 
