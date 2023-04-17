@@ -23,4 +23,7 @@ push:
 yapf:
 	poetry run yapf -i -vv **/*.py
 
+gen-readme:
+	scripts/gen_readme.py
+
 .PHONE: *
