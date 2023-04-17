@@ -12,6 +12,8 @@ from langchain_utils.utils import (
     get_word_count,
     deliver_prompts,
     general_document_source_info,
+    get_percentage_non_ascii,
+    get_token_count,
     get_default_chunk_size,
 )
 from langchain_utils.loaders import load_url
@@ -62,10 +64,21 @@ def main():
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))
+    char_count = len(all_text)
     print(
         f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
         file=sys.stderr,
     )
+    if args.print_percentage_non_ascii:
+        print(
+            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            file=sys.stderr,
+        )
+        token_count = get_token_count(all_text)
+        print(f'Token count: {token_count}', file=sys.stderr)
+        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
+        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        return
     if args.merge:
         from langchain.docstore.document import Document
 

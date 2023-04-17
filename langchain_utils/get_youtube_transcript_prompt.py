@@ -14,6 +14,8 @@ from .utils import (
     get_word_count,
     deliver_prompts,
     get_default_chunk_size,
+    get_percentage_non_ascii,
+    get_token_count,
 )
 from .loaders import load_youtube_url
 from .utils_argparse import get_get_prompt_base_arg_parser
@@ -44,6 +46,21 @@ def main():
         f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
         file=sys.stderr,
     )
+    texts = [doc.page_content for doc in docs]
+    all_text = '\n'.join(texts)
+    word_count = get_word_count((all_text))
+    char_count = len(all_text)
+    if args.print_percentage_non_ascii:
+        print(
+            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            file=sys.stderr,
+        )
+        token_count = get_token_count(all_text)
+        print(f'Token count: {token_count}', file=sys.stderr)
+        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
+        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        return
+
     metadata = docs[0].metadata
     title = metadata['title']
     author = metadata['author']
