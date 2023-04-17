@@ -175,6 +175,9 @@ def deliver_prompts(
             print(formatted_prompt)
 
     def deliver_multiple_docs(documents: list['Document']):
+        if len(documents) == 1:
+            deliver_single_doc(documents[0])
+            return
         if edit:
             print(f'Please copy the prompts after each edits.', file=sys.stderr)
         for i, doc in enumerate(documents):
@@ -282,4 +285,3 @@ def get_default_chunk_size(model: str | None = None) -> int:
     if model not in MODEL_TO_CONTEXT_LENGTH_MAPPING:
         model = DEFAULT_MODEL
     return MODEL_TO_CONTEXT_LENGTH_MAPPING[model] // 2
-

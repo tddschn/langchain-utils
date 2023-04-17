@@ -109,7 +109,7 @@ def main():
         print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
         print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
         return
-    if args.merge:
+    if args.merge or args.no_split:
         from langchain.docstore.document import Document
 
         merged = Document(
@@ -120,13 +120,13 @@ def main():
         )
     if args.no_split:
         needs_splitting = False
-    if word_count > args.chunk_size * 0.75:
+    elif word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False
     deliver_prompts(
         what=args.what,
-        documents=[merged] if args.merge else docs,  # type: ignore
+        documents=[merged] if args.merge or args.no_split else docs,  # type: ignore
         needs_splitting=needs_splitting,
         copy=args.copy,
         edit=args.edit,

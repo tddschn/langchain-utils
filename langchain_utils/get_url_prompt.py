@@ -90,7 +90,7 @@ def main():
         )
     if args.no_split:
         needs_splitting = False
-    if word_count > args.chunk_size * 0.75:
+    elif word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False

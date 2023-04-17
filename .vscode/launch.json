@@ -12,6 +12,16 @@
       ]
     },
     {
+      "name": "pdfprompt no split",
+      "type": "python",
+      "request": "launch",
+      "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/pdfprompt",
+      "args": [
+        "/Users/tscp/Documents/sch/sph-paper/PCV 13 COPD CEA (1).pdf",
+        "-Sc"
+      ]
+    },
+    {
       "name": "pdfprompt dry run",
       "type": "python",
       "request": "launch",
