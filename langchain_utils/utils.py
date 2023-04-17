@@ -142,7 +142,10 @@ def deliver_prompts(
             template = REPLY_OK_IF_YOU_READ_TEMPLATE
         prompt = PromptTemplate.from_template(template)
         content = document.page_content
-        formatted_prompt = prompt.format(what=what, content=content)
+        if raw_triple_quotes:
+            formatted_prompt = prompt.format(content=content)
+        else:
+            formatted_prompt = prompt.format(what=what, content=content)
 
         def edit_prompt(formatted_prompt: str = formatted_prompt):
             formatted_prompt_path = save_str_to_tempfile(
@@ -188,7 +191,10 @@ def deliver_prompts(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
                 ).partial(x=str(i + 1))
             content = doc.page_content
-            formatted_prompt = prompt.format(what=what, content=content)
+            if raw_triple_quotes:
+                formatted_prompt = prompt.format(content=content)
+            else:
+                formatted_prompt = prompt.format(what=what, content=content)
             if dry_run:
                 print(
                     f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
