@@ -282,3 +282,4 @@ def get_default_chunk_size(model: str | None = None) -> int:
     if model not in MODEL_TO_CONTEXT_LENGTH_MAPPING:
         model = DEFAULT_MODEL
     return MODEL_TO_CONTEXT_LENGTH_MAPPING[model] // 2
+
