@@ -60,7 +60,8 @@ $ urlprompt --help
 
 usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                 [-n] [-w WHAT] [-M] [-j]
+                 [-n] [-w WHAT] [-M] [-j] [-g] [--github-path GITHUB_PATH]
+                 [--github-revision GITHUB_REVISION]
                  URL
 
 Get a prompt consisting the text content of a webpage
@@ -97,6 +98,11 @@ options:
   -M, --merge           Merge contents of all pages before processing
                         (default: False)
   -j, --javascript      Use JavaScript to render the page (default: False)
+  -g, --github          Load the raw file from a GitHub URL (default: False)
+  --github-path GITHUB_PATH
+                        Path to the GitHub file (default: README.md)
+  --github-revision GITHUB_REVISION
+                        Revision for the GitHub file (default: master)
 
 ```
 ### `pdfprompt`
