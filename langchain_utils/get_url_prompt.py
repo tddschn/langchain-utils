@@ -54,14 +54,14 @@ def get_args():
         help='Load the raw file from a GitHub URL',
         action='store_true',
     )
-    # parser.add_argument(
-    #     '--github-readme-path', default='README.md', help='Path to the GitHub README'
-    # )
-    # parser.add_argument(
-    #     '--github-readme-revision',
-    #     default='master',
-    #     help='Revision for the GitHub README',
-    # )
+    parser.add_argument(
+        '--github-path', default='README.md', help='Path to the GitHub file'
+    )
+    parser.add_argument(
+        '--github-revision',
+        default='master',
+        help='Revision for the GitHub file',
+    )
 
     args = parser.parse_args()
     args.chunk_size = get_default_chunk_size(args.model)
@@ -75,7 +75,11 @@ def main():
 
     if args.github:
         print(f'Loading GitHub raw file from {args.url} ...', file=sys.stderr)
-        docs = load_github_raw(github_url=args.url)
+        docs = load_github_raw(
+            github_url=args.url,
+            github_path=args.github_path,
+            github_revision=args.github_revision,
+        )
         print(f'Loaded GitHub raw file from {docs[0].metadata["url"]}', file=sys.stderr)
     else:
         print(f'Loading webpage from {args.url} ...', file=sys.stderr)

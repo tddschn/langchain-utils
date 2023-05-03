@@ -80,14 +80,17 @@ def load_word(path: str, mode: UnstructuredLoadingMode = "single") -> list['Docu
     return docs
 
 
-def load_github_raw(github_url: str) -> list['Document']:
+def load_github_raw(
+    github_url: str, github_revision: str = 'master', github_path: str = 'README.md'
+) -> list['Document']:
     from langchain.requests import TextRequestsWrapper
     from langchain.docstore.document import Document
 
     github_info = extract_github_info(github_url)
     if github_info is None:
         raise ValueError(f'Invalid GitHub URL: {github_url}')
-    url = get_github_file_raw_url(*github_info)
+    github_info |= {'revision': github_revision, 'file_path': github_path}
+    url = get_github_file_raw_url(**github_info)
     text = TextRequestsWrapper().get(url)
 
     docs = [Document(page_content=text, metadata={'url': url})]
