@@ -285,3 +285,39 @@ def get_default_chunk_size(model: str | None = None) -> int:
     if model not in MODEL_TO_CONTEXT_LENGTH_MAPPING:
         model = DEFAULT_MODEL
     return MODEL_TO_CONTEXT_LENGTH_MAPPING[model] // 2
+
+
+def extract_github_info(url: str) -> tuple[str, str, str, str] | None:
+    import re
+
+    # Define a regular expression to match GitHub URLs
+    pattern = (
+        r"^https?://github\.com/([^/]+)/([^/]+)(?:/(?:tree|blob)/([^/]+)(?:/(.+))?)?$"
+    )
+
+    # Use the regular expression to extract the URL components
+    match = re.match(pattern, url)
+    if match:
+        repo_owner = match.group(1)
+        repo_name = match.group(2)
+        revision = (
+            match.group(3) or "master"
+        )  # Use "main" as the default revision if not provided
+        file_path = (
+            match.group(4) or "README.md"
+        )  # Use "README.md" as the default file path if not provided
+
+        return repo_owner, repo_name, revision, file_path
+
+    return None
+
+
+def get_github_file_raw_url(
+    repo_owner: str, repo_name: str, revision: str = 'master', path: str = 'README.md'
+):
+    # Construct the raw URL for the README.md file
+    raw_url = (
+        f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{revision}/{path}"
+    )
+
+    return raw_url

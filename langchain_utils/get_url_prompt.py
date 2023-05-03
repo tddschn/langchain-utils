@@ -16,7 +16,7 @@ from langchain_utils.utils import (
     get_token_count,
     get_default_chunk_size,
 )
-from langchain_utils.loaders import load_url
+from langchain_utils.loaders import load_url, load_github_raw
 from langchain_utils.config import DEFAULT_URL_WHAT
 from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
 
@@ -48,6 +48,20 @@ def get_args():
         help='Use JavaScript to render the page',
         action='store_true',
     )
+    parser.add_argument(
+        '-g',
+        '--github',
+        help='Load the raw file from a GitHub URL',
+        action='store_true',
+    )
+    # parser.add_argument(
+    #     '--github-readme-path', default='README.md', help='Path to the GitHub README'
+    # )
+    # parser.add_argument(
+    #     '--github-readme-revision',
+    #     default='master',
+    #     help='Revision for the GitHub README',
+    # )
 
     args = parser.parse_args()
     args.chunk_size = get_default_chunk_size(args.model)
@@ -59,8 +73,13 @@ def main():
 
     args = get_args()
 
-    print(f'Loading webpage from {args.url} ...', file=sys.stderr)
-    docs = load_url(urls=[args.url], javascript=args.javascript)
+    if args.github:
+        print(f'Loading GitHub raw file from {args.url} ...', file=sys.stderr)
+        docs = load_github_raw(github_url=args.url)
+        print(f'Loaded GitHub raw file from {docs[0].metadata["url"]}', file=sys.stderr)
+    else:
+        print(f'Loading webpage from {args.url} ...', file=sys.stderr)
+        docs = load_url(urls=[args.url], javascript=args.javascript)
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))

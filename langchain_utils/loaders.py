@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+from curses import meta
 from typing import TYPE_CHECKING, Literal
+
+from langchain_utils.utils import extract_github_info, get_github_file_raw_url
 
 if TYPE_CHECKING:
     from langchain.docstore.document import Document
@@ -74,4 +77,18 @@ def load_word(path: str, mode: UnstructuredLoadingMode = "single") -> list['Docu
 
     loader = UnstructuredWordDocumentLoader(path, mode=mode)
     docs = loader.load()
+    return docs
+
+
+def load_github_raw(github_url: str) -> list['Document']:
+    from langchain.requests import TextRequestsWrapper
+    from langchain.docstore.document import Document
+
+    github_info = extract_github_info(github_url)
+    if github_info is None:
+        raise ValueError(f'Invalid GitHub URL: {github_url}')
+    url = get_github_file_raw_url(*github_info)
+    text = TextRequestsWrapper().get(url)
+
+    docs = [Document(page_content=text, metadata={'url': url})]
     return docs
