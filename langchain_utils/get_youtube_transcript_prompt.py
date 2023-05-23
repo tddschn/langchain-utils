@@ -69,8 +69,9 @@ def main():
     print(f'Title: {title}', file=sys.stderr)
     print(f'Author: {author}', file=sys.stderr)
     print(f'Publish date: {publish_date}', file=sys.stderr)
-    # if args.split or get_token_count(docs[0].page_content) > args.chunk_size:
-    if args.split or get_word_count(docs[0].page_content) > args.chunk_size * 0.75:
+    if args.no_split:
+        needs_splitting = False
+    elif word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
         needs_splitting = False
