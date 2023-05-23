@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "ytprompt on usenix security presentation",
+      "type": "python",
+      "request": "launch",
+      "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/ytprompt",
+      "args": ["https://www.youtube.com/watch?v=YAEK8Bm5VCc", "-c"]
+    },
+    {
       "name": "ytprompt on long transcript with edit",
       "type": "python",
       "request": "launch",
