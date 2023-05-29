@@ -113,6 +113,7 @@ $ pdfprompt --help
 usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
                  [-n] [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT]
+                 [-o] [-L OCR_LANGUAGE]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -153,6 +154,10 @@ options:
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a PDF
                         file)
+  -o, --fallback-ocr    Use OCR as fallback if no text detected on page
+                        (default: False)
+  -L OCR_LANGUAGE, --ocr-language OCR_LANGUAGE
+                        Language to use for Tesseract OCR (default: chi_sim)
 
 ```
 ### `ytprompt`
