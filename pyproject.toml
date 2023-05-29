@@ -40,6 +40,7 @@ pymupdf = "^1.21.1"
 unstructured = "0.5.2"
 selenium = "^4.8.3"
 bs4 = "^0.0.1"
+tqdm = "^4.65.0"
 
 
 [tool.poetry.group.dev.dependencies]

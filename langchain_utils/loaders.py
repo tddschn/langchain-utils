@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from curses import meta
 from typing import TYPE_CHECKING, Literal
 
 from langchain_utils.utils import extract_github_info, get_github_file_raw_url
+from langchain_utils.config import (
+    TESSERACT_OCR_DEFAULT_LANG,
+)
 
 if TYPE_CHECKING:
     from langchain.docstore.document import Document
@@ -17,11 +19,24 @@ def load_youtube_url(youtube_url: str) -> list['Document']:
     return docs
 
 
-def load_pdf(pdf_path: str) -> list['Document']:
-    from langchain.document_loaders import PyMuPDFLoader
+def load_pdf(
+    pdf_path: str,
+    use_ocr_if_no_text_detected_on_page: bool = False,
+    ocr_language: str = TESSERACT_OCR_DEFAULT_LANG,
+) -> list['Document']:
+    if use_ocr_if_no_text_detected_on_page:
+        from langchain_utils.document_loaders import PyMuPDFLoaderWithFallbackOCR
 
-    loader = PyMuPDFLoader(pdf_path)
-    docs = loader.load()
+        loader_cls = PyMuPDFLoaderWithFallbackOCR
+        load_kwargs = {'ocr_language': ocr_language}
+    else:
+        from langchain.document_loaders import PyMuPDFLoader
+
+        loader_cls = PyMuPDFLoader
+        load_kwargs = {}
+
+    loader = loader_cls(pdf_path)
+    docs = loader.load(**load_kwargs)
     return docs
 
 

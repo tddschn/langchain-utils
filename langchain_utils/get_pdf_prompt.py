@@ -18,7 +18,7 @@ from langchain_utils.utils import (
     get_default_chunk_size,
 )
 from langchain_utils.loaders import load_pdf
-from langchain_utils.config import DEFAULT_PDF_WHAT
+from langchain_utils.config import DEFAULT_PDF_WHAT, TESSERACT_OCR_DEFAULT_LANG
 from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
 
 
@@ -60,6 +60,19 @@ def get_args():
         type=str,
         default=DEFAULT_PDF_WHAT,
     )
+    parser.add_argument(
+        '-o',
+        '--fallback-ocr',
+        help='Use OCR as fallback if no text detected on page',
+        action='store_true',
+    )
+    parser.add_argument(
+        '-L',
+        '--ocr-language',
+        help='Language to use for Tesseract OCR',
+        type=str,
+        default=TESSERACT_OCR_DEFAULT_LANG,
+    )
 
     args = parser.parse_args()
     args.chunk_size = get_default_chunk_size(args.model)
@@ -72,7 +85,14 @@ def main():
     args = get_args()
 
     print(f'Loading PDF from {args.pdf_path} ...', file=sys.stderr)
-    docs = load_pdf(args.pdf_path)
+    if args.fallback_ocr:
+        docs = load_pdf(
+            args.pdf_path,
+            use_ocr_if_no_text_detected_on_page=True,
+            ocr_language=args.ocr_language,
+        )
+    else:
+        docs = load_pdf(args.pdf_path)
     num_whole_pdf_pages = len(docs)
     if args.pages and args.page_slice:
         print(
