@@ -63,7 +63,7 @@ def get_args():
     parser.add_argument(
         '-o',
         '--fallback-ocr',
-        help='Use OCR as fallback if no text detected on page',
+        help='Use OCR as fallback if no text detected on page, please set TESSDATA_PREFIX environment variable to the path of your tesseract data directory',
         action='store_true',
     )
     parser.add_argument(
