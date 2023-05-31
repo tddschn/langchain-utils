@@ -94,10 +94,6 @@ def main():
 
         merged = Document(
             page_content=all_text,
-            # metadata=docs[0].metadata,
-            # metadata={
-            #     k: v for k, v in docs[0].metadata.items() if k not in {'page_number'}
-            # },
         )
     documents = [merged] if args.merge else docs  # type: ignore
     num_docs = len(documents)

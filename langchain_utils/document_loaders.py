@@ -80,7 +80,8 @@ class PyMuPDFLoaderWithFallbackOCR(BasePDFLoader):
                     {
                         "source": file_path,
                         "file_path": file_path,
-                        "page_number": page.number + 1,
+                        # "page_number": page.number + 1,
+                        "page": page.number,
                         "total_pages": len(doc),
                     },
                     **{

@@ -2,6 +2,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "pdfprompt no -o after intruducing -o",
+      "type": "python",
+      "request": "launch",
+      "program": "/Users/tscp/Library/Caches/pypoetry/virtualenvs/langchain-utils-lFbVQMly-py3.11/bin/pdfprompt",
+      // '/Users/tscp/Documents/sch/pathophysiology/patho-7-应激-9版 徐晨2022.pdf' -l 34:43 -c
+      "args": [
+        "/Users/tscp/Documents/sch/pathophysiology/patho-7-应激-9版 徐晨2022.pdf",
+        "-l",
+        "34:43",
+        "-c",
+        "-M"
+      ]
+    },
+    {
       "name": "ytprompt on usenix security presentation",
       "type": "python",
       "request": "launch",

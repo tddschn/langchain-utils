@@ -21,7 +21,6 @@ def get_file_sha1(file_path: PathLike) -> str:
     return sha1.hexdigest()
 
 
-
 def get_str_punc_and_whitespace_chars_pct(text):
     # write a python function to count the % of chars in a str that is 1) punctuation, or 2) \t, \n
     import string
@@ -64,7 +63,7 @@ def langchain_doc_to_chatgpt_retrieval_plugin_doc(doc: 'Document') -> dict:
     return {
         "text": doc.page_content,
         "source": doc.metadata['source']
-        + f'page {doc.metadata["page_number"]}/{doc.metadata["total_pages"]}',
+        + f'page {doc.metadata["page"] + 1}/{doc.metadata["total_pages"]}',
         "author": doc.metadata['author'],
         "created_at": doc.metadata['creationDate'],
         "url": f'file://{doc.metadata["file_path"]}',

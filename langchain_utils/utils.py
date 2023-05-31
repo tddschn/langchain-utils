@@ -70,8 +70,11 @@ def format_date(dt: 'datetime') -> str:
 
 def pymupdf_doc_page_info(document: 'Document') -> str:
     metadata = document.metadata
-    if 'page_number' in metadata:
+    total_pages_in_metadata = 'total_pages' in metadata
+    if 'page_number' in metadata and total_pages_in_metadata:
         return f', Page {metadata["page_number"]}/{metadata["total_pages"]}'
+    elif 'page' in metadata and total_pages_in_metadata:
+        return f', Page {metadata["page"] + 1}/{metadata["total_pages"]}'
     else:
         return ''
 

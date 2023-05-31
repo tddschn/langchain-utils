@@ -101,16 +101,16 @@ def main():
         )
         sys.exit(1)
     if args.pages:
-        args.pages = [p for p in args.pages if p <= num_whole_pdf_pages and p > 0]
-        docs = [doc for doc in docs if doc.metadata['page_number'] in args.pages]
+        args.pages = [p - 1 for p in args.pages if p <= num_whole_pdf_pages and p > 0]
+        docs = [doc for doc in docs if doc.metadata['page'] in args.pages]
     if args.page_slice:
         args.pages = list(
-            x + 1
+            x - 1
             for x in list(range(num_whole_pdf_pages))[
                 convert_str_slice_notation_to_slice(args.page_slice)
             ]
         )
-        docs = [doc for doc in docs if doc.metadata['page_number'] in args.pages]
+        docs = [doc for doc in docs if doc.metadata['page'] in args.pages]
     texts = [doc.page_content for doc in docs]
     all_text = '\n'.join(texts)
     word_count = get_word_count((all_text))

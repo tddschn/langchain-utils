@@ -107,9 +107,6 @@ def main():
 
         merged = Document(
             page_content=all_text,
-            # metadata={
-            #     k: v for k, v in docs[0].metadata.items() if k not in {'page_number'}
-            # },
         )
     if args.no_split:
         needs_splitting = False
