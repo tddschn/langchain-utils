@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING, Callable, NoReturn
 import sys
 from .prompts import (
+    RAW_TEMPLATE,
     RAW_TRIPLE_QUOTES_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
@@ -135,17 +136,20 @@ def deliver_prompts(
     dry_run: bool = False,
     parts: list[int] | None = None,
     raw_triple_quotes: bool = False,
+    raw: bool = False,
 ):
     from langchain.prompts import PromptTemplate
 
     def deliver_single_doc(document: 'Document'):
-        if raw_triple_quotes:
+        if raw:
+            template = RAW_TEMPLATE
+        elif raw_triple_quotes:
             template = RAW_TRIPLE_QUOTES_TEMPLATE
         else:
             template = REPLY_OK_IF_YOU_READ_TEMPLATE
         prompt = PromptTemplate.from_template(template)
         content = document.page_content
-        if raw_triple_quotes:
+        if raw or raw_triple_quotes:
             formatted_prompt = prompt.format(content=content)
         else:
             formatted_prompt = prompt.format(what=what, content=content)
@@ -185,8 +189,11 @@ def deliver_prompts(
             print(f'Please copy the prompts after each edits.', file=sys.stderr)
         for i, doc in enumerate(documents):
             num_chunks = len(documents)
-            if raw_triple_quotes:
-                template = RAW_TRIPLE_QUOTES_TEMPLATE
+            if raw or raw_triple_quotes:
+                if raw:
+                    template = RAW_TEMPLATE
+                else:
+                    template = RAW_TRIPLE_QUOTES_TEMPLATE
                 prompt = PromptTemplate.from_template(template)
             elif i == 0:
                 prompt = PromptTemplate.from_template(
@@ -197,7 +204,7 @@ def deliver_prompts(
                     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
                 ).partial(x=str(i + 1))
             content = doc.page_content
-            if raw_triple_quotes:
+            if raw or raw_triple_quotes:
                 formatted_prompt = prompt.format(content=content)
             else:
                 formatted_prompt = prompt.format(what=what, content=content)

@@ -59,8 +59,9 @@ See [`prompts.py`](./langchain_utils/prompts.py) for other variations.
 $ urlprompt --help
 
 usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                 [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                 [-n] [-w WHAT] [-M] [-j] [-g] [--github-path GITHUB_PATH]
+                 [-P PARTS [PARTS ...]] [-r] [-R]
+                 [--print-percentage-non-ascii] [-n] [-w WHAT] [-M] [-j] [-g]
+                 [--github-path GITHUB_PATH]
                  [--github-revision GITHUB_REVISION]
                  URL
 
@@ -88,6 +89,7 @@ options:
                         (default: None)
   -r, --raw             Wraps the content in triple quotes with no extra text
                         (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
   --print-percentage-non-ascii
                         Print percentage of non-ascii characters (default:
                         False)
@@ -111,9 +113,9 @@ options:
 $ pdfprompt --help
 
 usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                 [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                 [-n] [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT]
-                 [-o] [-L OCR_LANGUAGE]
+                 [-P PARTS [PARTS ...]] [-r] [-R]
+                 [--print-percentage-non-ascii] [-n] [-p PAGES [PAGES ...]]
+                 [-l PAGE_SLICE] [-M] [-w WHAT] [-o] [-L OCR_LANGUAGE]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -140,6 +142,7 @@ options:
                         (default: None)
   -r, --raw             Wraps the content in triple quotes with no extra text
                         (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
   --print-percentage-non-ascii
                         Print percentage of non-ascii characters (default:
                         False)
@@ -154,8 +157,9 @@ options:
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a PDF
                         file)
-  -o, --fallback-ocr    Use OCR as fallback if no text detected on page
-                        (default: False)
+  -o, --fallback-ocr    Use OCR as fallback if no text detected on page,
+                        please set TESSDATA_PREFIX environment variable to the
+                        path of your tesseract data directory (default: False)
   -L OCR_LANGUAGE, --ocr-language OCR_LANGUAGE
                         Language to use for Tesseract OCR (default: chi_sim)
 
@@ -166,8 +170,8 @@ options:
 $ ytprompt --help
 
 usage: ytprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                [-n]
+                [-P PARTS [PARTS ...]] [-r] [-R]
+                [--print-percentage-non-ascii] [-n]
                 YouTube URL
 
 Get a prompt consisting Title and Transcript of a YouTube Video
@@ -194,6 +198,7 @@ options:
                         (default: None)
   -r, --raw             Wraps the content in triple quotes with no extra text
                         (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
   --print-percentage-non-ascii
                         Print percentage of non-ascii characters (default:
                         False)
@@ -206,8 +211,8 @@ options:
 $ textprompt --help
 
 usage: textprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                  [-n] [-C] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-r] [-R]
+                  [--print-percentage-non-ascii] [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from text files
@@ -235,6 +240,7 @@ options:
                         (default: None)
   -r, --raw             Wraps the content in triple quotes with no extra text
                         (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
   --print-percentage-non-ascii
                         Print percentage of non-ascii characters (default:
                         False)
@@ -253,8 +259,8 @@ options:
 $ htmlprompt --help
 
 usage: htmlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                  [-P PARTS [PARTS ...]] [-r] [--print-percentage-non-ascii]
-                  [-n] [-C] [-w WHAT] [-M]
+                  [-P PARTS [PARTS ...]] [-r] [-R]
+                  [--print-percentage-non-ascii] [-n] [-C] [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from html files
@@ -282,6 +288,7 @@ options:
                         (default: None)
   -r, --raw             Wraps the content in triple quotes with no extra text
                         (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
   --print-percentage-non-ascii
                         Print percentage of non-ascii characters (default:
                         False)

@@ -125,6 +125,7 @@ def main():
         extra_chunk_info_fn=general_document_source_info,
         dry_run=args.dry_run,
         raw_triple_quotes=args.raw,
+        raw=args.raw_no_quotes,
         parts=args.parts,
     )
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+RAW_TEMPLATE = '{content}'
+
 RAW_TRIPLE_QUOTES_TEMPLATE = '''
 """
 {content}
