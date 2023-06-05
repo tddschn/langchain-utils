@@ -41,6 +41,7 @@ unstructured = "0.5.2"
 selenium = "^4.8.3"
 bs4 = "^0.0.1"
 tqdm = "^4.65.0"
+pync = {version = "^2.0.3", extras = ["notify"]}
 
 
 [tool.poetry.group.dev.dependencies]

@@ -2177,6 +2177,20 @@ files = [
 ]
 
 [[package]]
+name = "pync"
+version = "2.0.3"
+description = "Python Wrapper for Mac OS 10.10 Notification Center"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pync-2.0.3.tar.gz", hash = "sha256:38b9e61735a3161f9211a5773c5f5ea698f36af4ff7f77fa03e8d1ff0caa117f"},
+]
+
+[package.dependencies]
+python-dateutil = ">=2.0"
+
+[[package]]
 name = "pyperclip"
 version = "1.8.2"
 description = "A cross-platform clipboard module for Python. (Only handles plain text for now.)"
@@ -3245,4 +3259,4 @@ requests = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "db12b617d324f415c78ad79bf7be5111607fe9ff92508f72fc4924fc80fa93c3"
+content-hash = "ec4a711f88b980198a8424631f4654296a13be13f830d6199b993eb3c3238a84"
