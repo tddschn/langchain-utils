@@ -1,5 +1,5 @@
 REFERRAL_STATEMENT = '''
-Pretend you're an engineer at {company_name} and you're referring Xinyuan Chen to the role below:
+Pretend you're {your_title} and you're referring Xinyuan Chen to the role below:
 
 """
 {job_description}

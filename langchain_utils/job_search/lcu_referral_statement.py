@@ -8,6 +8,7 @@ Purpose: Generate and copy the referral statement
 import argparse
 from pathlib import Path
 import sys
+from turtle import title
 from langchain_utils.job_search.config import (
     referral_default_schools_list,
     referral_statement_default_relationship_with_referral,
@@ -15,6 +16,7 @@ from langchain_utils.job_search.config import (
     referral_statement_default_additional_requirements,
     referral_statement_default_resume_markdown_path,
     referral_statement_default_job_description,
+    referral_statement_default_title,
 )
 
 from langchain_utils.job_search.prompts import REFERRAL_STATEMENT
@@ -76,6 +78,15 @@ def get_args():
         default=referral_statement_default_resume_markdown_path,
     )
 
+    parser.add_argument(
+        '-t',
+        '--title',
+        help='your job title',
+        metavar='str',
+        type=str,
+        default=referral_statement_default_title,
+    )
+
     return parser.parse_args()
 
 
@@ -94,6 +105,7 @@ def main():
         additional_requirements=args.additional_requirements,
         resume_markdown_content=args.resume_path.read_text(),
         job_description=referral_statement_default_job_description,
+        title=args.title,
     )
 
     pyperclip.copy(formatted_prompt)

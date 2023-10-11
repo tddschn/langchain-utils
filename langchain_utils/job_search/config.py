@@ -21,3 +21,6 @@ referral_statement_default_job_description = pyperclip.paste()
 referral_statement_default_resume_markdown_path = (
     Path.home() / 'testdir/resume/resume.md'
 )
+
+# title: 'Software Engineer'
+referral_statement_default_title = 'Software Engineer'
