@@ -99,7 +99,6 @@ def main():
 
     prompt = PromptTemplate.from_template(REFERRAL_STATEMENT)
     formatted_prompt = prompt.format(
-        company_name=args.school,
         relationship_with_referral=args.relationship,
         referral_name=args.name,
         additional_requirements=args.additional_requirements,
