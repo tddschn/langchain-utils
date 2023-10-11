@@ -67,7 +67,7 @@ def get_args():
     )
 
     parser.add_argument(
-        '-r',
+        '-R',
         '--resume-path',
         help='the path to the markdown resume',
         metavar='PATH',
