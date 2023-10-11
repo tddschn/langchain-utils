@@ -105,7 +105,7 @@ def main():
         additional_requirements=args.additional_requirements,
         resume_markdown_content=args.resume_path.read_text(),
         job_description=referral_statement_default_job_description,
-        title=args.title,
+        your_title=args.title,
     )
 
     pyperclip.copy(formatted_prompt)
