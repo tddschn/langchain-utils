@@ -1,4 +1,6 @@
 import pyperclip
+from pathlib import Path
+
 
 referral_default_schools_list = ['NC State', 'Fudan University', 'UC San Diego']
 
@@ -16,4 +18,6 @@ referral_statement_default_additional_requirements = 'highlight his skills in py
 referral_statement_default_resume_markdown_content = pyperclip.paste()
 
 # resume_markdown_path: ~/testdir/resume/resume.md
-referral_statement_default_resume_markdown_path = '~/testdir/resume/resume.md'
+referral_statement_default_resume_markdown_path = (
+    Path.home() / 'testdir/resume/resume.md'
+)
