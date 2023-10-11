@@ -24,6 +24,8 @@ get-html-prompt = "langchain_utils.get_html_prompt:main"
 htmlprompt = "langchain_utils.get_html_prompt:main"
 get-pdf-prompt = "langchain_utils.get_pdf_prompt:main"
 pdfprompt = "langchain_utils.get_pdf_prompt:main"
+referral-statement-prompt = "langchain_utils.job_search.lcu_referral_statement:main"
+refstmtprompt = "langchain_utils.job_search.lcu_referral_statement:main"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/tddschn/langchain-utils/issues"
@@ -41,7 +43,7 @@ unstructured = "0.5.2"
 selenium = "^4.8.3"
 bs4 = "^0.0.1"
 tqdm = "^4.65.0"
-pync = {version = "^2.0.3", extras = ["notify"]}
+pync = { version = "^2.0.3", extras = ["notify"] }
 
 
 [tool.poetry.group.dev.dependencies]
