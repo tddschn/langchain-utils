@@ -14,8 +14,8 @@ referral_statement_default_referral_name = 'Xinyuan Chen'
 # additional_requirements = 'highlight his skills in python, cloud, data science, and web dev, and show that he  has Strong interpersonal skills.'
 referral_statement_default_additional_requirements = 'highlight his skills in python, cloud, data science, and web dev, and show that he  has Strong interpersonal skills.'
 
-# resume_markdown_content: str = pyperclip.paste()
-referral_statement_default_resume_markdown_content = pyperclip.paste()
+# job_description: str = pyperclip.paste()
+referral_statement_default_job_description = pyperclip.paste()
 
 # resume_markdown_path: ~/testdir/resume/resume.md
 referral_statement_default_resume_markdown_path = (

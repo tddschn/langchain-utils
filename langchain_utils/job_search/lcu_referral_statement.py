@@ -14,6 +14,7 @@ from langchain_utils.job_search.config import (
     referral_statement_default_referral_name,
     referral_statement_default_additional_requirements,
     referral_statement_default_resume_markdown_path,
+    referral_statement_default_job_description,
 )
 
 from langchain_utils.job_search.prompts import REFERRAL_STATEMENT
@@ -92,6 +93,7 @@ def main():
         referral_name=args.name,
         additional_requirements=args.additional_requirements,
         resume_markdown_content=args.resume_path.read_text(),
+        job_description=referral_statement_default_job_description,
     )
 
     pyperclip.copy(formatted_prompt)
