@@ -42,6 +42,12 @@ def main():
     args = get_args()
     print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
     docs = load_youtube_url(args.youtube_url)
+    if not docs:
+        print(
+            f'No transcript found for the video. Confirm this by checking if the `CC` button is available on {args.youtube_url} .',
+            file=sys.stderr,
+        )
+        return
     print(
         f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
         file=sys.stderr,
