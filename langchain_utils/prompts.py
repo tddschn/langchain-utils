@@ -9,7 +9,7 @@ RAW_TRIPLE_QUOTES_TEMPLATE = '''
 '''.strip()
 
 REPLY_OK_IF_YOU_READ_TEMPLATE = '''
-Below is {what}, reply "OK" if you read:
+Below is {what}, reply "OK" (AND NOTHING MORE) if you read:
 
 """
 {content}
@@ -17,7 +17,7 @@ Below is {what}, reply "OK" if you read:
 '''.strip()
 
 REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST = '''
-Below is the first part of {what}, reply "Read part 1 OK" if you read:
+Below is the first part of {what}, reply "Read part 1 OK" (AND NOTHING MORE) if you read:
 
 """
 {content}
@@ -25,7 +25,7 @@ Below is the first part of {what}, reply "Read part 1 OK" if you read:
 '''.strip()
 
 REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED = '''
-Below is the next part of {what}, reply "Read part {x} OK" if you read:
+Below is the next part of {what}, reply "Read part {x} OK" (AND NOTHING MORE) if you read:
 
 """
 {content}
