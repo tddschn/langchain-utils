@@ -115,7 +115,7 @@ $ pdfprompt --help
 usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                  [-P PARTS [PARTS ...]] [-r] [-R]
                  [--print-percentage-non-ascii] [-n] [-p PAGES [PAGES ...]]
-                 [-l PAGE_SLICE] [-M] [-w WHAT] [-o] [-L OCR_LANGUAGE]
+                 [-l PAGE_SLICE] [-M] [-w WHAT] [-o] [-O] [-L OCR_LANGUAGE]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -160,8 +160,10 @@ options:
   -o, --fallback-ocr    Use OCR as fallback if no text detected on page,
                         please set TESSDATA_PREFIX environment variable to the
                         path of your tesseract data directory (default: False)
+  -O, --force-ocr       Force OCR on all pages (default: False)
   -L OCR_LANGUAGE, --ocr-language OCR_LANGUAGE
-                        Language to use for Tesseract OCR (default: chi_sim)
+                        Language to use for Tesseract OCR (like eng, chi_sim,
+                        chi_tra, chi_tra_vert etc.)) (default: eng)
 
 ```
 ### `ytprompt`
