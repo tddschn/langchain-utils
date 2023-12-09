@@ -2,32 +2,33 @@
 
 from pathlib import Path
 
-DEFAULT_PDF_WHAT = 'the content of a PDF file'
-DEFAULT_URL_WHAT = 'the content of a webpage'
-DEFAULT_HTML_WHAT = 'the text content of a html file'
-DEFAULT_GENERAL_WHAT = 'the content of a document'
+DEFAULT_PDF_WHAT = "the content of a PDF file"
+DEFAULT_URL_WHAT = "the content of a webpage"
+DEFAULT_HTML_WHAT = "the text content of a html file"
+DEFAULT_GENERAL_WHAT = "the content of a document"
 
 MODEL_TO_CONTEXT_LENGTH_MAPPING = {
-    'gpt-3.5-turbo': 4096,
-    'text-davinci-003': 4096,
-    'gpt-4': 8192,
-    'gpt-4-32k': 32768,
+    "gpt-3.5-turbo": 4096,
+    "text-davinci-003": 4096,
+    "gpt-4": 8192,
+    "gpt-4-32k": 32768,
 }
 
-DEFAULT_MODEL = 'gpt-3.5-turbo'
+DEFAULT_MODEL = "gpt-3.5-turbo"
 
 
 _REPO_ROOT_DIR = Path(__file__).parent.parent
-TEMPLATE_DIR = _REPO_ROOT_DIR / 'templates'
+TEMPLATE_DIR = _REPO_ROOT_DIR / "templates"
 
-_README_PATH = _REPO_ROOT_DIR / 'README.md'
-_README_COMMANDS = ['urlprompt', 'pdfprompt', 'ytprompt', 'textprompt', 'htmlprompt']
-_README_TEMPLATE = TEMPLATE_DIR / 'README.jinja.md'
-_COMMAND_USAGE_TEMPLATE = TEMPLATE_DIR / 'readme-command-usage.jinja.md'
+_README_PATH = _REPO_ROOT_DIR / "README.md"
+_README_COMMANDS = ["urlprompt", "pdfprompt", "ytprompt", "textprompt", "htmlprompt"]
+_README_TEMPLATE = TEMPLATE_DIR / "README.jinja.md"
+_COMMAND_USAGE_TEMPLATE = TEMPLATE_DIR / "readme-command-usage.jinja.md"
 
 LOW_QUALITY_PAGE_CONTENT_PUNC_WHITESPACE_PCT_THRESHOLD = 0.15
 
-TESSERACT_OCR_DEFAULT_LANG = 'chi_sim'
+# TESSERACT_OCR_DEFAULT_LANG = 'chi_sim'
+TESSERACT_OCR_DEFAULT_LANG = "eng"
 
 tesseract_langs = """
 afr
@@ -196,5 +197,5 @@ yor
 """.strip().splitlines()
 
 _MACOS_CONDA_ENV_EG_TESSDATA_PREFIX = (
-    '/usr/local/Caskroom/miniconda/base/envs/eg/share/tessdata/'
+    "/usr/local/Caskroom/miniconda/base/envs/eg/share/tessdata/"
 )

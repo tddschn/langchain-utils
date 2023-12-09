@@ -15,8 +15,8 @@ from langchain_utils.utils_doc_loaders import get_str_punc_and_whitespace_chars_
 def set_tessdata(tessdata_prefix: str = _MACOS_CONDA_ENV_EG_TESSDATA_PREFIX):
     import os
 
-    if 'TESSDATA_PREFIX' not in os.environ:
-        os.environ['TESSDATA_PREFIX'] = tessdata_prefix
+    if "TESSDATA_PREFIX" not in os.environ:
+        os.environ["TESSDATA_PREFIX"] = tessdata_prefix
 
 
 set_tessdata()
@@ -40,6 +40,7 @@ class PyMuPDFLoaderWithFallbackOCR(BasePDFLoader):
     def load(
         self,
         ocr_language: str = TESSERACT_OCR_DEFAULT_LANG,
+        force_ocr: bool = False,
     ) -> list[Document]:
         """Load file."""
         import fitz
@@ -70,7 +71,13 @@ class PyMuPDFLoaderWithFallbackOCR(BasePDFLoader):
 
         documents = [
             Document(
-                page_content=page.get_text().encode("utf-8")
+                page_content=page.get_text(
+                    textpage=page.get_textpage_ocr(
+                        flags=0, dpi=300, full=True, language=ocr_language
+                    )
+                ).encode("utf-8")
+                if force_ocr
+                else page.get_text().encode("utf-8")
                 or page.get_text(
                     textpage=page.get_textpage_ocr(
                         flags=0, dpi=300, full=True, language=ocr_language
@@ -88,7 +95,7 @@ class PyMuPDFLoaderWithFallbackOCR(BasePDFLoader):
                         k: doc.metadata[k]
                         for k in doc.metadata
                         if type(doc.metadata[k]) in [str, int]
-                    }
+                    },
                 ),
             )
             for page in tqdm(doc, desc="Processing pages")
@@ -112,10 +119,10 @@ class DocumentJSONLoader(BaseLoader):
         import json
 
         documents = []
-        included_keys = {'page_content', 'metadata'}
+        included_keys = {"page_content", "metadata"}
         doc_dicts: list[dict] = json.loads(self.doc_json_path.read_text())
         for doc_dict in filter(
-            lambda doc: get_str_punc_and_whitespace_chars_pct(doc['page_content'])
+            lambda doc: get_str_punc_and_whitespace_chars_pct(doc["page_content"])
             <= low_quality_threshold,
             doc_dicts,
         ):
