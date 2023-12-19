@@ -25,13 +25,13 @@ def get_args():
     """Get command-line arguments"""
 
     parser = get_get_prompt_base_arg_parser(
-        description='Get a prompt consisting Title and Transcript of a YouTube Video'
+        description="Get a prompt consisting Title and Transcript of a YouTube Video"
     )
 
-    parser.add_argument('youtube_url', metavar='YouTube URL', help='YouTube URL')
+    parser.add_argument("youtube_url", metavar="YouTube URL", help="YouTube URL")
 
     args = parser.parse_args()
-    args.youtube_url = args.youtube_url.split('&')[0]
+    args.youtube_url = args.youtube_url.split("&")[0]
     args.chunk_size = get_default_chunk_size(args.model)
     return args
 
@@ -40,41 +40,42 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    print(f'Loading transcript from {args.youtube_url} ...', file=sys.stderr)
+    print(f"Loading transcript from {args.youtube_url} ...", file=sys.stderr)
     docs = load_youtube_url(args.youtube_url)
     if not docs:
         print(
-            f'No transcript found for the video. Confirm this by checking if the `CC` button is available on {args.youtube_url} .',
+            f"No transcript found for the video. Confirm this by checking if the `CC` button is available on {args.youtube_url} .",
             file=sys.stderr,
         )
         return
     print(
-        f'Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}',
+        f"Loaded transcript. Word count: {get_word_count((t := docs[0].page_content))} Char count: {len(t)}",
         file=sys.stderr,
     )
     texts = [doc.page_content for doc in docs]
-    all_text = '\n'.join(texts)
+    all_text = "\n".join(texts)
     word_count = get_word_count((all_text))
     char_count = len(all_text)
     if args.print_percentage_non_ascii:
         print(
-            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            f"Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%",
             file=sys.stderr,
         )
         token_count = get_token_count(all_text)
-        print(f'Token count: {token_count}', file=sys.stderr)
-        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
-        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        print(f"Token count: {token_count}", file=sys.stderr)
+        print(f"Token / Word: {token_count / word_count:.2f}", file=sys.stderr)
+        print(f"Token / Char: {token_count / char_count:.2f}", file=sys.stderr)
         return
 
     metadata = docs[0].metadata
-    title = metadata['title']
-    author = metadata['author']
-    publish_date = format_date(metadata['publish_date'])
-    what = f'''the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}'''
-    print(f'Title: {title}', file=sys.stderr)
-    print(f'Author: {author}', file=sys.stderr)
-    print(f'Publish date: {publish_date}', file=sys.stderr)
+    title = metadata["title"]
+    author = metadata["author"]
+    # publish_date = format_date(metadata['publish_date'])
+    publish_date = metadata["publish_date"]
+    what = f"""the transcript of a YouTube video titled "{title}" uploaded by "{author}" on {publish_date}"""
+    print(f"Title: {title}", file=sys.stderr)
+    print(f"Author: {author}", file=sys.stderr)
+    print(f"Publish date: {publish_date}", file=sys.stderr)
     if args.no_split:
         needs_splitting = False
     elif word_count > args.chunk_size * 0.75:
@@ -96,5 +97,5 @@ def main():
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
