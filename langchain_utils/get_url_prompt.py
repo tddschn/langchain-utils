@@ -15,6 +15,8 @@ from langchain_utils.utils import (
     get_percentage_non_ascii,
     get_token_count,
     get_default_chunk_size,
+    url_to_html,
+    substack_html_to_md,
 )
 from langchain_utils.loaders import load_url, load_github_raw
 from langchain_utils.config import DEFAULT_URL_WHAT
@@ -25,42 +27,48 @@ def get_args():
     """Get command-line arguments"""
 
     parser = get_get_prompt_base_arg_parser(
-        description='Get a prompt consisting the text content of a webpage'
+        description="Get a prompt consisting the text content of a webpage"
     )
 
-    parser.add_argument('url', help='URL to the webpage', metavar='URL', type=str)
+    parser.add_argument("url", help="URL to the webpage", metavar="URL", type=str)
     parser.add_argument(
-        '-w',
-        '--what',
-        help='Initial knowledge you want to insert before the PDF content in the prompt',
+        "-w",
+        "--what",
+        help="Initial knowledge you want to insert before the PDF content in the prompt",
         type=str,
         default=DEFAULT_URL_WHAT,
     )
     parser.add_argument(
-        '-M',
-        '--merge',
-        help='Merge contents of all pages before processing',
-        action='store_true',
+        "-M",
+        "--merge",
+        help="Merge contents of all pages before processing",
+        action="store_true",
     )
     parser.add_argument(
-        '-j',
-        '--javascript',
-        help='Use JavaScript to render the page',
-        action='store_true',
+        "-j",
+        "--javascript",
+        help="Use JavaScript to render the page",
+        action="store_true",
     )
     parser.add_argument(
-        '-g',
-        '--github',
-        help='Load the raw file from a GitHub URL',
-        action='store_true',
+        "-g",
+        "--github",
+        help="Load the raw file from a GitHub URL",
+        action="store_true",
     )
     parser.add_argument(
-        '--github-path', default='README.md', help='Path to the GitHub file'
+        "--github-path", default="README.md", help="Path to the GitHub file"
     )
     parser.add_argument(
-        '--github-revision',
-        default='master',
-        help='Revision for the GitHub file',
+        "--github-revision",
+        default="master",
+        help="Revision for the GitHub file",
+    )
+
+    parser.add_argument(
+        "--substack",
+        help="Load the raw file from a Substack URL",
+        action="store_true",
     )
 
     args = parser.parse_args()
@@ -74,33 +82,40 @@ def main():
     args = get_args()
 
     if args.github:
-        print(f'Loading GitHub raw file from {args.url} ...', file=sys.stderr)
+        print(f"Loading GitHub raw file from {args.url} ...", file=sys.stderr)
         docs = load_github_raw(
             github_url=args.url,
             github_path=args.github_path,
             github_revision=args.github_revision,
         )
         print(f'Loaded GitHub raw file from {docs[0].metadata["url"]}', file=sys.stderr)
+    elif args.substack:
+        print(f"Loading Substack webpage from {args.url} ...", file=sys.stderr)
+        html = url_to_html(args.url)
+        md = substack_html_to_md(html)
+        from langchain.docstore.document import Document
+
+        docs = [Document(page_content=md)]
     else:
-        print(f'Loading webpage from {args.url} ...', file=sys.stderr)
+        print(f"Loading webpage from {args.url} ...", file=sys.stderr)
         docs = load_url(urls=[args.url], javascript=args.javascript)
     texts = [doc.page_content for doc in docs]
-    all_text = '\n'.join(texts)
+    all_text = "\n".join(texts)
     word_count = get_word_count((all_text))
     char_count = len(all_text)
     print(
-        f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
+        f"Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}",
         file=sys.stderr,
     )
     if args.print_percentage_non_ascii:
         print(
-            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            f"Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%",
             file=sys.stderr,
         )
         token_count = get_token_count(all_text)
-        print(f'Token count: {token_count}', file=sys.stderr)
-        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
-        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        print(f"Token count: {token_count}", file=sys.stderr)
+        print(f"Token / Word: {token_count / word_count:.2f}", file=sys.stderr)
+        print(f"Token / Char: {token_count / char_count:.2f}", file=sys.stderr)
         return
     if args.merge:
         from langchain.docstore.document import Document
@@ -130,5 +145,5 @@ def main():
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

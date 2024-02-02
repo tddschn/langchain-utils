@@ -30,7 +30,7 @@ def convert_str_slice_notation_to_slice(str_slice: str) -> slice:
         except ValueError:
             return None
 
-    return slice(*list(map(int_or_none, str_slice.split(':'))))
+    return slice(*list(map(int_or_none, str_slice.split(":"))))
     # if str_slice.startswith(':'):
     #     start = None
     # else:
@@ -51,7 +51,7 @@ def convert_str_slice_notation_to_slice(str_slice: str) -> slice:
     # return slice(start, stop, step)
 
 
-def get_token_count(s: str, model_name: str = 'gpt-3.5-turbo') -> int:
+def get_token_count(s: str, model_name: str = "gpt-3.5-turbo") -> int:
     from tiktoken import encoding_for_model
 
     enc = encoding_for_model(model_name)
@@ -65,74 +65,74 @@ def get_word_count(s: str) -> int:
     return len(s.split())
 
 
-def format_date(dt: 'datetime') -> str:
-    return dt.strftime('%Y-%m-%d')
+def format_date(dt: "datetime") -> str:
+    return dt.strftime("%Y-%m-%d")
 
 
-def pymupdf_doc_page_info(document: 'Document') -> str:
+def pymupdf_doc_page_info(document: "Document") -> str:
     metadata = document.metadata
-    total_pages_in_metadata = 'total_pages' in metadata
-    if 'page_number' in metadata and total_pages_in_metadata:
+    total_pages_in_metadata = "total_pages" in metadata
+    if "page_number" in metadata and total_pages_in_metadata:
         return f', Page {metadata["page_number"]}/{metadata["total_pages"]}'
-    elif 'page' in metadata and total_pages_in_metadata:
+    elif "page" in metadata and total_pages_in_metadata:
         return f', Page {metadata["page"] + 1}/{metadata["total_pages"]}'
     else:
-        return ''
+        return ""
 
 
-def html_source_info(document: 'Document') -> str:
+def html_source_info(document: "Document") -> str:
     metadata = document.metadata
-    if 'source' in metadata:
+    if "source" in metadata:
         return f', Title: {metadata["title"]}, Source: {metadata["source"]}'
     else:
-        return ''
+        return ""
 
 
-def general_document_source_info(document: 'Document') -> str:
+def general_document_source_info(document: "Document") -> str:
     metadata = document.metadata
-    if 'source' in metadata:
+    if "source" in metadata:
         return f', Source: {metadata["source"]}'
     else:
-        return ''
+        return ""
 
 
-def save_str_to_tempfile(s: str, suffix: str = '.txt') -> str:
+def save_str_to_tempfile(s: str, suffix: str = ".txt") -> str:
     import tempfile
 
-    with tempfile.NamedTemporaryFile(mode='w', suffix=suffix, delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=suffix, delete=False) as f:
         f.write(s)
         return f.name
 
 
 def open_file(path: str):
     # if on macOS, open with default app
-    if sys.platform == 'darwin':
+    if sys.platform == "darwin":
         import subprocess
 
-        subprocess.call(('open', path))
+        subprocess.call(("open", path))
     # if on Linux, open with default app
-    elif sys.platform.startswith('linux'):
+    elif sys.platform.startswith("linux"):
         import subprocess
 
-        subprocess.call(('xdg-open', path))
+        subprocess.call(("xdg-open", path))
     # if on Windows, open with default app
-    elif sys.platform == 'win32':
+    elif sys.platform == "win32":
         import os
 
         os.startfile(path)
     else:
-        raise NotImplementedError(f'Unsupported platform: {sys.platform}')
+        raise NotImplementedError(f"Unsupported platform: {sys.platform}")
 
 
 def deliver_prompts(
     what: str,
-    documents: list['Document'],
+    documents: list["Document"],
     should_be_only_one_doc: bool = False,
     needs_splitting: bool = False,
     copy: bool = True,
     edit: bool = False,
     chunk_size: int = 2000,
-    extra_chunk_info_fn: Callable[['Document'], str] = lambda doc: '',
+    extra_chunk_info_fn: Callable[["Document"], str] = lambda doc: "",
     dry_run: bool = False,
     parts: list[int] | None = None,
     raw_triple_quotes: bool = False,
@@ -140,7 +140,7 @@ def deliver_prompts(
 ):
     from langchain.prompts import PromptTemplate
 
-    def deliver_single_doc(document: 'Document'):
+    def deliver_single_doc(document: "Document"):
         if raw:
             template = RAW_TEMPLATE
         elif raw_triple_quotes:
@@ -156,11 +156,11 @@ def deliver_prompts(
 
         def edit_prompt(formatted_prompt: str = formatted_prompt):
             formatted_prompt_path = save_str_to_tempfile(
-                formatted_prompt, suffix='.txt'
+                formatted_prompt, suffix=".txt"
             )
             open_file(formatted_prompt_path)
             print(
-                f'Please edit the prompt at {formatted_prompt_path} and copy it yourself.',
+                f"Please edit the prompt at {formatted_prompt_path} and copy it yourself.",
                 file=sys.stderr,
             )
             return
@@ -170,23 +170,23 @@ def deliver_prompts(
             return
         if copy:
             print(
-                f'Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(document)}',
+                f"Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(document)}",
                 file=sys.stderr,
             )
             if not dry_run:
                 import pyperclip
 
                 pyperclip.copy(formatted_prompt)
-                print('Prompt copied to clipboard.', file=sys.stderr)
+                print("Prompt copied to clipboard.", file=sys.stderr)
         else:
             print(formatted_prompt)
 
-    def deliver_multiple_docs(documents: list['Document']):
+    def deliver_multiple_docs(documents: list["Document"]):
         if len(documents) == 1:
             deliver_single_doc(documents[0])
             return
         if edit:
-            print(f'Please copy the prompts after each edits.', file=sys.stderr)
+            print(f"Please copy the prompts after each edits.", file=sys.stderr)
         for i, doc in enumerate(documents):
             num_chunks = len(documents)
             if raw or raw_triple_quotes:
@@ -210,20 +210,20 @@ def deliver_prompts(
                 formatted_prompt = prompt.format(what=what, content=content)
             if dry_run:
                 print(
-                    f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
+                    f"Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
                 )
                 continue
             if edit:
                 input(
-                    f'Press Enter to edit prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
+                    f"Press Enter to edit prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
                 )
                 formatted_prompt_path = save_str_to_tempfile(
-                    formatted_prompt, suffix='.txt'
+                    formatted_prompt, suffix=".txt"
                 )
                 open_file(formatted_prompt_path)
                 continue
             input(
-                f'Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: '
+                f"Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
             )
             import pyperclip
 
@@ -231,21 +231,21 @@ def deliver_prompts(
 
     if dry_run:
         print(
-            f'Dry running. Nothing will be copied to your clipboard, and you don\''
-            't need to press Enter to move forward.'
+            f"Dry running. Nothing will be copied to your clipboard, and you don'"
+            "t need to press Enter to move forward."
         )
     if needs_splitting:
         from langchain.text_splitter import TokenTextSplitter
 
-        splitter = TokenTextSplitter(encoding_name='cl100k_base', chunk_size=chunk_size)
+        splitter = TokenTextSplitter(encoding_name="cl100k_base", chunk_size=chunk_size)
         splitted = splitter.split_documents(documents)
         if parts:
             len_splitted = len(splitted)
             parts = list({part for part in parts if 0 <= part - 1 < len_splitted})
             print(
-                f'Selecting {len(parts)} parts out of {len_splitted}.', file=sys.stderr
+                f"Selecting {len(parts)} parts out of {len_splitted}.", file=sys.stderr
             )
-            print(f'Using parts: {parts}', file=sys.stderr)
+            print(f"Using parts: {parts}", file=sys.stderr)
             splitted = [splitted[i - 1] for i in parts]
         deliver_multiple_docs(splitted)
 
@@ -266,7 +266,7 @@ def save_stdin_to_tempfile() -> str:
     import sys
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        with open(temp_file.name, 'w') as f:
+        with open(temp_file.name, "w") as f:
             shutil.copyfileobj(sys.stdin, f)
         temp_file_path = temp_file.name
     return temp_file_path
@@ -276,10 +276,9 @@ def save_clipboard_to_tempfile() -> str:
     # create a temp file and save stdin to it, and return the tempfile path
     import tempfile
     import pyperclip
-    import sys
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        with open(temp_file.name, 'w') as f:
+        with open(temp_file.name, "w") as f:
             f.write(pyperclip.paste())
         temp_file_path = temp_file.name
     return temp_file_path
@@ -330,10 +329,48 @@ def extract_github_info(url: str) -> dict[str, str] | None:
 def get_github_file_raw_url(
     repo_owner: str,
     repo_name: str,
-    revision: str = 'master',
-    file_path: str = 'README.md',
+    revision: str = "master",
+    file_path: str = "README.md",
 ):
     # Construct the raw URL for the README.md file
     raw_url = f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{revision}/{file_path}"
 
     return raw_url
+
+
+def substack_html_to_md(html: str) -> str:
+    # cSpell:disable
+    from bs4 import BeautifulSoup
+    from markdownify import markdownify as md
+    # cSpell:enable
+
+    # Parse the HTML content
+    soup = BeautifulSoup(html, "html.parser")
+
+    # Extract the title and the target div content
+    title = soup.find("title").text if soup.find("title") else ""  # type: ignore
+    target_div = soup.select_one("div.available-content > div")
+
+    # Remove all sub-divs from the target div
+    if target_div:
+        for sub_div in target_div.find_all("div", recursive=True):
+            sub_div.decompose()
+
+    # Convert the title and the cleaned div content to Markdown
+    markdown_content = (
+        f"# {title}\n\n" + md(str(target_div), heading_style="ATX")
+        if target_div
+        else "# " + title
+    )
+
+    return markdown_content
+
+
+def url_to_html(url: str) -> str:
+    from urllib.request import urlopen
+
+    # Open the URL and read the HTML content
+    with urlopen(url) as response:
+        html_content = response.read().decode("utf-8")
+
+    return html_content
