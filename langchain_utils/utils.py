@@ -368,9 +368,14 @@ def substack_html_to_md(html: str) -> str:
 
 def url_to_html(url: str) -> str:
     from urllib.request import urlopen
+    from urllib.request import Request
+    from langchain_utils.config import USER_AGENT_WINDOWS_CHROME
+
+    # Create a request with the specified user agent
+    req = Request(url, headers={"User-Agent": USER_AGENT_WINDOWS_CHROME})
 
     # Open the URL and read the HTML content
-    with urlopen(url) as response:
+    with urlopen(req) as response:
         html_content = response.read().decode("utf-8")
 
     return html_content

@@ -199,3 +199,5 @@ yor
 _MACOS_CONDA_ENV_EG_TESSDATA_PREFIX = (
     "/usr/local/Caskroom/miniconda/base/envs/eg/share/tessdata/"
 )
+
+USER_AGENT_WINDOWS_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
