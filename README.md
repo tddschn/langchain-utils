@@ -62,7 +62,7 @@ usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                  [-P PARTS [PARTS ...]] [-r] [-R]
                  [--print-percentage-non-ascii] [-n] [-w WHAT] [-M] [-j] [-g]
                  [--github-path GITHUB_PATH]
-                 [--github-revision GITHUB_REVISION]
+                 [--github-revision GITHUB_REVISION] [--substack]
                  URL
 
 Get a prompt consisting the text content of a webpage
@@ -105,6 +105,8 @@ options:
                         Path to the GitHub file (default: README.md)
   --github-revision GITHUB_REVISION
                         Revision for the GitHub file (default: master)
+  --substack            Load from a Substack URL and convert it to Markdown
+                        (default: False)
 
 ```
 ### `pdfprompt`
