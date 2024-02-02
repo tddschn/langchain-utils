@@ -67,7 +67,7 @@ def get_args():
 
     parser.add_argument(
         "--substack",
-        help="Load the raw file from a Substack URL",
+        help="Load from a Substack URL and convert it to Markdown",
         action="store_true",
     )
 
