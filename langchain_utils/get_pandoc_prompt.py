@@ -78,7 +78,7 @@ def main():
 
     print(f"Loading file(s) from {args.path} ...", file=sys.stderr)
     print(
-        f'Converting from "{getattr(args, 'from')}" to "{args.to}" using pandoc ...',
+        f"""Converting from "{getattr(args, 'from')}" to "{args.to}" using pandoc ...""",
         file=sys.stderr,
     )
     if len(args.path) < 2:
