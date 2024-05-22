@@ -30,7 +30,7 @@ def get_args():
     """Get command-line arguments"""
 
     parser = get_get_prompt_base_arg_parser(
-        description="Get a prompt from arbitrary files. You need to have `pandoc` installed and in $PATH, it will be used to convert source files to desired (hopefully textual) format."
+        description="Get a prompt from arbitrary files. You need to have `pandoc` installed and in $PATH, it will be used to convert source files to desired (hopefully textual) format. Common use cases: Getting prompts from EPub books or several TeX files."
     )
 
     parser.add_argument(
@@ -60,9 +60,16 @@ def get_args():
         action="store_true",
     )
 
-    parser.add_argument("--from", help="The format that is passed to -f in pandoc")
     parser.add_argument(
-        "--to", help="The format that is passed to -t in pandoc", default="gfm-raw_html"
+        "--from",
+        metavar="PANDOC_FROM_FORMAT",
+        help="The format that is passed to -f in pandoc",
+    )
+    parser.add_argument(
+        "--to",
+        metavar="PANDOC_TO_FORMAT",
+        help="The format that is passed to -t in pandoc. gfm-raw_html means GitHub Flavored Markdown with raw HTML stripped.",
+        default="gfm-raw_html",
     )
 
     args = parser.parse_args()

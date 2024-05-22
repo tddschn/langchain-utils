@@ -5,6 +5,7 @@ LangChain Utilities
 - [langchain-utils](#langchain-utils)
   - [Prompt generation using LangChain document loaders](#prompt-generation-using-langchain-document-loaders)
     - [Demos](#demos)
+    - [`pandocprompt`](#pandocprompt)
     - [`urlprompt`](#urlprompt)
     - [`pdfprompt`](#pdfprompt)
     - [`ytprompt`](#ytprompt)
@@ -53,22 +54,26 @@ See [`prompts.py`](./langchain_utils/prompts.py) for other variations.
 
 <video src="https://user-images.githubusercontent.com/45612704/231731553-63cf3cef-a210-4761-8ca3-dd47bedc3393.mp4" controls width="100%"></video>
 
-### `urlprompt`
+### `pandocprompt`
 
 ```
-$ urlprompt --help
+$ pandocprompt --help
 
-usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
-                 [-P PARTS [PARTS ...]] [-r] [-R]
-                 [--print-percentage-non-ascii] [-n] [-w WHAT] [-M] [-j] [-g]
-                 [--github-path GITHUB_PATH]
-                 [--github-revision GITHUB_REVISION] [--substack]
-                 URL
+usage: pandocprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                    [-P PARTS [PARTS ...]] [-r] [-R]
+                    [--print-percentage-non-ascii] [-n] [--out OUT] [-C]
+                    [-w WHAT] [-M] [--from PANDOC_FROM_FORMAT]
+                    [--to PANDOC_TO_FORMAT]
+                    [PATH ...]
 
-Get a prompt consisting the text content of a webpage
+Get a prompt from arbitrary files. You need to have `pandoc` installed and in
+$PATH, it will be used to convert source files to desired (hopefully textual)
+format. Common use cases: Getting prompts from EPub books or several TeX
+files.
 
 positional arguments:
-  URL                   URL to the webpage
+  PATH                  Paths to the text files, or stdin if not provided
+                        (default: None)
 
 options:
   -h, --help            show this help message and exit
@@ -76,7 +81,9 @@ options:
   -c, --copy            Copy the prompt to clipboard (default: False)
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
-                        Model to use (default: gpt-3.5-turbo)
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
   -S, --no-split        Do not split the prompt into multiple parts (use this
                         if the model has a really large context size)
                         (default: False)
@@ -94,6 +101,66 @@ options:
                         Print percentage of non-ascii characters (default:
                         False)
   -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
+  -C, --from-clipboard  Load text from clipboard (default: False)
+  -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
+                        content in the prompt (default: the content of a
+                        document)
+  -M, --merge           Merge contents of all pages before processing
+                        (default: False)
+  --from PANDOC_FROM_FORMAT
+                        The format that is passed to -f in pandoc (default:
+                        None)
+  --to PANDOC_TO_FORMAT
+                        The format that is passed to -t in pandoc. gfm-
+                        raw_html means GitHub Flavored Markdown with raw HTML
+                        stripped. (default: gfm-raw_html)
+
+```
+### `urlprompt`
+
+```
+$ urlprompt --help
+
+usage: urlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
+                 [-P PARTS [PARTS ...]] [-r] [-R]
+                 [--print-percentage-non-ascii] [-n] [--out OUT] [-w WHAT]
+                 [-M] [-j] [-g] [--github-path GITHUB_PATH]
+                 [--github-revision GITHUB_REVISION] [--substack]
+                 URL
+
+Get a prompt consisting the text content of a webpage
+
+positional arguments:
+  URL                   URL to the webpage
+
+options:
+  -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
+  -c, --copy            Copy the prompt to clipboard (default: False)
+  -e, --edit            Edit the prompt and copy manually (default: False)
+  -m model, --model model
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
+  -S, --no-split        Do not split the prompt into multiple parts (use this
+                        if the model has a really large context size)
+                        (default: False)
+  -s chunk_size, --chunk-size chunk_size
+                        Chunk size when splitting transcript, also used to
+                        determine whether to split, defaults to 1/2 of the
+                        context length limit of the model (default: None)
+  -P PARTS [PARTS ...], --parts PARTS [PARTS ...]
+                        Parts to select in the processes list of Documents
+                        (default: None)
+  -r, --raw             Wraps the content in triple quotes with no extra text
+                        (default: False)
+  -R, --raw-no-quotes   Output the content only (default: False)
+  --print-percentage-non-ascii
+                        Print percentage of non-ascii characters (default:
+                        False)
+  -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a
                         webpage)
@@ -116,8 +183,9 @@ $ pdfprompt --help
 
 usage: pdfprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                  [-P PARTS [PARTS ...]] [-r] [-R]
-                 [--print-percentage-non-ascii] [-n] [-p PAGES [PAGES ...]]
-                 [-l PAGE_SLICE] [-M] [-w WHAT] [-o] [-O] [-L OCR_LANGUAGE]
+                 [--print-percentage-non-ascii] [-n] [--out OUT]
+                 [-p PAGES [PAGES ...]] [-l PAGE_SLICE] [-M] [-w WHAT] [-o]
+                 [-O] [-L OCR_LANGUAGE]
                  PDF Path
 
 Get a prompt consisting the text content of a PDF file
@@ -131,7 +199,9 @@ options:
   -c, --copy            Copy the prompt to clipboard (default: False)
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
-                        Model to use (default: gpt-3.5-turbo)
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
   -S, --no-split        Do not split the prompt into multiple parts (use this
                         if the model has a really large context size)
                         (default: False)
@@ -149,6 +219,7 @@ options:
                         Print percentage of non-ascii characters (default:
                         False)
   -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
   -p PAGES [PAGES ...], --pages PAGES [PAGES ...]
                         Only include specified page numbers (default: None)
   -l PAGE_SLICE, --page-slice PAGE_SLICE
@@ -175,7 +246,7 @@ $ ytprompt --help
 
 usage: ytprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                 [-P PARTS [PARTS ...]] [-r] [-R]
-                [--print-percentage-non-ascii] [-n]
+                [--print-percentage-non-ascii] [-n] [--out OUT]
                 YouTube URL
 
 Get a prompt consisting Title and Transcript of a YouTube Video
@@ -189,7 +260,9 @@ options:
   -c, --copy            Copy the prompt to clipboard (default: False)
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
-                        Model to use (default: gpt-3.5-turbo)
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
   -S, --no-split        Do not split the prompt into multiple parts (use this
                         if the model has a really large context size)
                         (default: False)
@@ -207,6 +280,7 @@ options:
                         Print percentage of non-ascii characters (default:
                         False)
   -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
 
 ```
 ### `textprompt`
@@ -216,7 +290,8 @@ $ textprompt --help
 
 usage: textprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                   [-P PARTS [PARTS ...]] [-r] [-R]
-                  [--print-percentage-non-ascii] [-n] [-C] [-w WHAT] [-M]
+                  [--print-percentage-non-ascii] [-n] [--out OUT] [-C]
+                  [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from text files
@@ -231,7 +306,9 @@ options:
   -c, --copy            Copy the prompt to clipboard (default: False)
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
-                        Model to use (default: gpt-3.5-turbo)
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
   -S, --no-split        Do not split the prompt into multiple parts (use this
                         if the model has a really large context size)
                         (default: False)
@@ -249,6 +326,7 @@ options:
                         Print percentage of non-ascii characters (default:
                         False)
   -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
   -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the content of a
@@ -264,7 +342,8 @@ $ htmlprompt --help
 
 usage: htmlprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                   [-P PARTS [PARTS ...]] [-r] [-R]
-                  [--print-percentage-non-ascii] [-n] [-C] [-w WHAT] [-M]
+                  [--print-percentage-non-ascii] [-n] [--out OUT] [-C]
+                  [-w WHAT] [-M]
                   [PATH ...]
 
 Get a prompt from html files
@@ -279,7 +358,9 @@ options:
   -c, --copy            Copy the prompt to clipboard (default: False)
   -e, --edit            Edit the prompt and copy manually (default: False)
   -m model, --model model
-                        Model to use (default: gpt-3.5-turbo)
+                        Model to use. This only affects the chunk size. Use -S
+                        to disable splitting (infinite chunk size). (default:
+                        gpt-4-32k)
   -S, --no-split        Do not split the prompt into multiple parts (use this
                         if the model has a really large context size)
                         (default: False)
@@ -297,6 +378,7 @@ options:
                         Print percentage of non-ascii characters (default:
                         False)
   -n, --dry-run         Dry run (default: False)
+  --out OUT             Output file (default: None)
   -C, --from-clipboard  Load text from clipboard (default: False)
   -w WHAT, --what WHAT  Initial knowledge you want to insert before the PDF
                         content in the prompt (default: the text content of a

@@ -5,6 +5,7 @@ LangChain Utilities
 - [langchain-utils](#langchain-utils)
   - [Prompt generation using LangChain document loaders](#prompt-generation-using-langchain-document-loaders)
     - [Demos](#demos)
+    - [`pandocprompt`](#pandocprompt)
     - [`urlprompt`](#urlprompt)
     - [`pdfprompt`](#pdfprompt)
     - [`ytprompt`](#ytprompt)
