@@ -18,48 +18,46 @@ from langchain_utils.utils import (
 )
 from langchain_utils.loaders import load_html
 from langchain_utils.config import DEFAULT_HTML_WHAT
-from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
+from langchain_utils.utils_argparse import (
+    get_get_prompt_base_arg_parser,
+    postprocess_args,
+)
 
 
 def get_args():
     """Get command-line arguments"""
 
-    parser = get_get_prompt_base_arg_parser(description='Get a prompt from html files')
+    parser = get_get_prompt_base_arg_parser(description="Get a prompt from html files")
 
     parser.add_argument(
-        'path',
-        help='Paths to the html files, or stdin if not provided',
-        metavar='PATH',
+        "path",
+        help="Paths to the html files, or stdin if not provided",
+        metavar="PATH",
         type=str,
         default=None,
-        nargs='*',
+        nargs="*",
     )
 
     parser.add_argument(
-        '-C', '--from-clipboard', help='Load text from clipboard', action='store_true'
+        "-C", "--from-clipboard", help="Load text from clipboard", action="store_true"
     )
 
     parser.add_argument(
-        '-w',
-        '--what',
-        help='Initial knowledge you want to insert before the PDF content in the prompt',
+        "-w",
+        "--what",
+        help="Initial knowledge you want to insert before the PDF content in the prompt",
         type=str,
         default=DEFAULT_HTML_WHAT,
     )
     parser.add_argument(
-        '-M',
-        '--merge',
-        help='Merge contents of all pages before processing',
-        action='store_true',
+        "-M",
+        "--merge",
+        help="Merge contents of all pages before processing",
+        action="store_true",
     )
 
     args = parser.parse_args()
-    if args.from_clipboard:
-        args.path = [save_clipboard_to_tempfile()]
-    elif not args.path:
-        args.path = [save_stdin_to_tempfile()]
-    args.chunk_size = get_default_chunk_size(args.model)
-    return args
+    return postprocess_args(args)
 
 
 def main():
@@ -67,13 +65,13 @@ def main():
 
     args = get_args()
 
-    print(f'Loading html file(s) from {args.path} ...', file=sys.stderr)
+    print(f"Loading html file(s) from {args.path} ...", file=sys.stderr)
     docs = [load_html(p)[0] for p in args.path]
     texts = [doc.page_content for doc in docs]
-    all_text = '\n'.join(texts)
+    all_text = "\n".join(texts)
     word_count = get_word_count((all_text))
     print(
-        f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
+        f"Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}",
         file=sys.stderr,
     )
     if args.merge:
@@ -106,5 +104,5 @@ def main():
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

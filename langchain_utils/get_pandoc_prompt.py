@@ -20,7 +20,10 @@ from langchain_utils.utils import (
 )
 from langchain_utils.loaders import load_pandoc
 from langchain_utils.config import DEFAULT_GENERAL_WHAT
-from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
+from langchain_utils.utils_argparse import (
+    get_get_prompt_base_arg_parser,
+    postprocess_args,
+)
 
 
 def get_args():
@@ -63,12 +66,7 @@ def get_args():
     )
 
     args = parser.parse_args()
-    if args.from_clipboard:
-        args.path = [save_clipboard_to_tempfile()]
-    elif not args.path:
-        args.path = [save_stdin_to_tempfile()]
-    args.chunk_size = get_default_chunk_size(args.model)
-    return args
+    return postprocess_args(args)
 
 
 def main():
