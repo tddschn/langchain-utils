@@ -111,3 +111,19 @@ def load_github_raw(
 
     docs = [Document(page_content=text, metadata={"url": url})]
     return docs
+
+
+def load_pandoc(
+    input_file: str, output_format: str = "gfm", input_format: str | None = None
+) -> list["Document"]:
+    import subprocess
+    from langchain.docstore.document import Document
+
+    command = ["pandoc", input_file, "-t", output_format]
+    if input_format:
+        command.extend(["-f", input_format])
+
+    result = subprocess.run(command, capture_output=True, text=True, check=True)
+
+    docs = [Document(page_content=result.stdout)]
+    return docs

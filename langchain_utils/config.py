@@ -15,6 +15,7 @@ MODEL_TO_CONTEXT_LENGTH_MAPPING = {
 }
 
 DEFAULT_MODEL = "gpt-3.5-turbo"
+DEFAULT_MODEL = "gpt-4-32k"
 
 
 _REPO_ROOT_DIR = Path(__file__).parent.parent

@@ -26,6 +26,8 @@ get-html-prompt = "langchain_utils.get_html_prompt:main"
 htmlprompt = "langchain_utils.get_html_prompt:main"
 get-pdf-prompt = "langchain_utils.get_pdf_prompt:main"
 pdfprompt = "langchain_utils.get_pdf_prompt:main"
+get-pandoc-prompt = "langchain_utils.get_pandoc_prompt:main"
+pandocprompt = "langchain_utils.get_pandoc_prompt:main"
 referral-statement-prompt = "langchain_utils.job_search.lcu_referral_statement:main"
 refstmtprompt = "langchain_utils.job_search.lcu_referral_statement:main"
 
@@ -33,7 +35,7 @@ refstmtprompt = "langchain_utils.job_search.lcu_referral_statement:main"
 "Bug Tracker" = "https://github.com/tddschn/langchain-utils/issues"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11, <4.0"
 langchain = "^0.0.351"
 youtube-transcript-api = "^0.5.0"
 pytube = "^15.0.0"
