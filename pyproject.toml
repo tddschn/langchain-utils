@@ -50,6 +50,7 @@ tqdm = "^4.65.0"
 pync = { version = "^2.0.3", extras = ["notify"] }
 markdownify = "^0.11.6"
 typing-extensions = "3.10.0.2"
+langchain-core = "0.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
