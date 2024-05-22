@@ -26,33 +26,33 @@ from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
 def get_args():
     """Get command-line arguments"""
 
-    parser = get_get_prompt_base_arg_parser(description='Get a prompt from text files')
+    parser = get_get_prompt_base_arg_parser(description="Get a prompt from text files")
 
     parser.add_argument(
-        'path',
-        help='Paths to the text files, or stdin if not provided',
-        metavar='PATH',
+        "path",
+        help="Paths to the text files, or stdin if not provided",
+        metavar="PATH",
         type=str,
         default=None,
-        nargs='*',
+        nargs="*",
     )
 
     parser.add_argument(
-        '-C', '--from-clipboard', help='Load text from clipboard', action='store_true'
+        "-C", "--from-clipboard", help="Load text from clipboard", action="store_true"
     )
 
     parser.add_argument(
-        '-w',
-        '--what',
-        help='Initial knowledge you want to insert before the PDF content in the prompt',
+        "-w",
+        "--what",
+        help="Initial knowledge you want to insert before the PDF content in the prompt",
         type=str,
         default=DEFAULT_GENERAL_WHAT,
     )
     parser.add_argument(
-        '-M',
-        '--merge',
-        help='Merge contents of all pages before processing',
-        action='store_true',
+        "-M",
+        "--merge",
+        help="Merge contents of all pages before processing",
+        action="store_true",
     )
 
     args = parser.parse_args()
@@ -69,25 +69,25 @@ def main():
 
     args = get_args()
 
-    print(f'Loading text file(s) from {args.path} ...', file=sys.stderr)
+    print(f"Loading text file(s) from {args.path} ...", file=sys.stderr)
     docs = [load_text(p)[0] for p in args.path]
     texts = [doc.page_content for doc in docs]
-    all_text = '\n'.join(texts)
+    all_text = "\n".join(texts)
     word_count = get_word_count((all_text))
     char_count = len(all_text)
     print(
-        f'Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}',
+        f"Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}",
         file=sys.stderr,
     )
     if args.print_percentage_non_ascii:
         print(
-            f'Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%',
+            f"Percentage of non-ascii characters: {get_percentage_non_ascii(all_text) * 100:.2f}%",
             file=sys.stderr,
         )
         token_count = get_token_count(all_text)
-        print(f'Token count: {token_count}', file=sys.stderr)
-        print(f'Token / Word: {token_count / word_count:.2f}', file=sys.stderr)
-        print(f'Token / Char: {token_count / char_count:.2f}', file=sys.stderr)
+        print(f"Token count: {token_count}", file=sys.stderr)
+        print(f"Token / Word: {token_count / word_count:.2f}", file=sys.stderr)
+        print(f"Token / Char: {token_count / char_count:.2f}", file=sys.stderr)
         return
     if args.merge:
         from langchain.docstore.document import Document
@@ -116,8 +116,9 @@ def main():
         raw_triple_quotes=args.raw,
         raw=args.raw_no_quotes,
         parts=args.parts,
+        out=args.out,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

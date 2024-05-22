@@ -137,6 +137,7 @@ def deliver_prompts(
     parts: list[int] | None = None,
     raw_triple_quotes: bool = False,
     raw: bool = False,
+    out: str | None = None,
 ):
     from langchain.prompts import PromptTemplate
 
@@ -178,6 +179,10 @@ def deliver_prompts(
 
                 pyperclip.copy(formatted_prompt)
                 print("Prompt copied to clipboard.", file=sys.stderr)
+        elif out:
+            with open(out, "w") as f:
+                f.write(formatted_prompt)
+                print(f"Prompt written to {out}.", file=sys.stderr)
         else:
             print(formatted_prompt)
 

@@ -142,6 +142,7 @@ def main():
         raw_triple_quotes=args.raw,
         raw=args.raw_no_quotes,
         parts=args.parts,
+        out=args.out,
     )
 
 
