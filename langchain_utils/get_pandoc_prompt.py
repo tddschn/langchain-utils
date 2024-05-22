@@ -30,7 +30,7 @@ def get_args():
     """Get command-line arguments"""
 
     parser = get_get_prompt_base_arg_parser(
-        description="Get a prompt from arbitrary files. You need to have `pandoc` installed and in $PATH, it will be used to convert source files to desired (hopefully textual) format. Common use cases: Getting prompts from EPub books or several TeX files."
+        description="Get prompts from arbitrary files. You need to have `pandoc` installed and in $PATH, it will be used to convert source files to desired (hopefully textual) format. Common use cases: Getting prompts from EPub books or several TeX files."
     )
 
     parser.add_argument(

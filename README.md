@@ -66,7 +66,7 @@ usage: pandocprompt [-h] [-V] [-c] [-e] [-m model] [-S] [-s chunk_size]
                     [--to PANDOC_TO_FORMAT]
                     [PATH ...]
 
-Get a prompt from arbitrary files. You need to have `pandoc` installed and in
+Get prompts from arbitrary files. You need to have `pandoc` installed and in
 $PATH, it will be used to convert source files to desired (hopefully textual)
 format. Common use cases: Getting prompts from EPub books or several TeX
 files.
