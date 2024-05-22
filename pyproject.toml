@@ -49,6 +49,7 @@ bs4 = "^0.0.1"
 tqdm = "^4.65.0"
 pync = { version = "^2.0.3", extras = ["notify"] }
 markdownify = "^0.11.6"
+typing-extensions = "3.10.0.2"
 
 
 [tool.poetry.group.dev.dependencies]
