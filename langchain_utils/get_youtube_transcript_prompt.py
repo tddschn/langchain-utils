@@ -29,6 +29,7 @@ def get_args():
     )
 
     parser.add_argument("youtube_url", metavar="YouTube URL", help="YouTube URL")
+    parser.add_argument("-l", "--lang", help="Language of the transcript", default="en")
 
     args = parser.parse_args()
     args.youtube_url = args.youtube_url.split("&")[0]
@@ -41,7 +42,7 @@ def main():
 
     args = get_args()
     print(f"Loading transcript from {args.youtube_url} ...", file=sys.stderr)
-    docs = load_youtube_url(args.youtube_url)
+    docs = load_youtube_url(args.youtube_url, language=args.lang)
     if not docs:
         print(
             f"No transcript found for the video. Confirm this by checking if the `CC` button is available on {args.youtube_url} .",

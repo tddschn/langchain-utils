@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Union, Sequence
 
 from langchain_utils.utils import extract_github_info, get_github_file_raw_url
 from langchain_utils.config import (
@@ -11,10 +11,15 @@ if TYPE_CHECKING:
     from langchain.docstore.document import Document
 
 
-def load_youtube_url(youtube_url: str) -> list["Document"]:
+def load_youtube_url(
+    youtube_url: str,
+    language: Union[str, Sequence[str]] = "en",
+) -> list["Document"]:
     from langchain.document_loaders import YoutubeLoader
 
-    loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=True)
+    loader = YoutubeLoader.from_youtube_url(
+        youtube_url, add_video_info=True, language=language
+    )
     docs = loader.load()
     return docs
 
