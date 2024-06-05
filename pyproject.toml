@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langchain-utils"
-version = "0.7.2"
+version = "0.7.3"
 description = "Utilities built upon the langchain library"
 authors = ["Teddy Xinyuan Chen <45612704+tddschn@users.noreply.github.com>"]
 readme = "README.md"
