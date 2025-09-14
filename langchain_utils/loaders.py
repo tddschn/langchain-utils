@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
-
 from typing import TYPE_CHECKING, Literal, Union, Sequence
-
 from langchain_utils.utils import extract_github_info, get_github_file_raw_url
-from langchain_utils.config import (
-    TESSERACT_OCR_DEFAULT_LANG,
-)
+from langchain_utils.config import TESSERACT_OCR_DEFAULT_LANG
 
 if TYPE_CHECKING:
     from langchain.docstore.document import Document
 
 
 def load_youtube_url(
-    youtube_url: str,
-    language: Union[str, Sequence[str]] = "en",
+    youtube_url: str, language: Union[str, Sequence[str]] = "en"
 ) -> list["Document"]:
     from langchain.document_loaders import YoutubeLoader
 
@@ -29,7 +24,19 @@ def load_pdf(
     use_ocr_if_no_text_detected_on_page: bool = False,
     ocr_language: str = TESSERACT_OCR_DEFAULT_LANG,
     force_ocr: bool = False,
+    ocr_engine: str = "tesseract",
 ) -> list["Document"]:
+    if (
+        (force_ocr or use_ocr_if_no_text_detected_on_page)
+        and ocr_engine == "apple-vision"
+        and (sys.platform == "darwin")
+    ):
+        try:
+            return _load_pdf_with_apple_vision(pdf_path, ocr_language=ocr_language)
+        except ImportError:
+            # Fallback to tesseract if apple-vision-utils is not installed
+            # This is a safeguard, the CLI should have already handled this.
+            pass
     if force_ocr or use_ocr_if_no_text_detected_on_page:
         from langchain_utils.document_loaders import PyMuPDFLoaderWithFallbackOCR
 
@@ -40,7 +47,6 @@ def load_pdf(
 
         loader_cls = PyMuPDFLoader
         load_kwargs = {}
-
     loader = loader_cls(pdf_path)
     docs = loader.load(**load_kwargs)
     return docs
@@ -57,17 +63,14 @@ def load_url(urls: list[str], javascript: bool = False) -> list["Document"]:
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36'
         # }
-
         # kwargs = {'headers': headers}
         # You are using old version of unstructured. The headers parameter is ignored
         kwargs = {}
-
     from unstructured.partition.html import partition_html
 
     partition_html(url="https://mp.weixin.qq.com/s/FsrDnCFKGD-FzP5YD76tbA")
     loader = loader_class(urls=urls, **kwargs)
     docs = loader.load()
-
     return docs
 
 
@@ -113,7 +116,6 @@ def load_github_raw(
     github_info |= {"revision": github_revision, "file_path": github_path}
     url = get_github_file_raw_url(**github_info)
     text = TextRequestsWrapper().get(url)
-
     docs = [Document(page_content=text, metadata={"url": url})]
     return docs
 
@@ -127,8 +129,6 @@ def load_pandoc(
     command = ["pandoc", input_file, "-t", output_format]
     if input_format:
         command.extend(["-f", input_format])
-
     result = subprocess.run(command, capture_output=True, text=True, check=True)
-
     docs = [Document(page_content=result.stdout)]
     return docs

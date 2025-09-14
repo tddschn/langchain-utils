@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
-"""
-Author : Xinyuan Chen <45612704+tddschn@users.noreply.github.com>
-Date   : 2023-04-09
-"""
+"\nAuthor : Xinyuan Chen <45612704+tddschn@users.noreply.github.com>\nDate   : 2023-04-09\n"
 
 import sys
-
 from langchain_utils import __version__
 from langchain_utils.utils import (
     deliver_prompts,
@@ -23,11 +19,9 @@ from langchain_utils.utils_argparse import get_get_prompt_base_arg_parser
 
 def get_args():
     """Get command-line arguments"""
-
     parser = get_get_prompt_base_arg_parser(
         description="Get a prompt consisting the text content of a PDF file"
     )
-
     parser.add_argument(
         "pdf_path", help="Path to the PDF file", metavar="PDF Path", type=str
     )
@@ -68,14 +62,20 @@ def get_args():
     parser.add_argument(
         "-O", "--force-ocr", help="Force OCR on all pages", action="store_true"
     )
+    if sys.platform == "darwin":
+        parser.add_argument(
+            "--ocr-engine",
+            help="[macOS only] OCR engine to use.",
+            choices=["apple-vision", "tesseract"],
+            default="apple-vision",
+        )
     parser.add_argument(
         "-L",
         "--ocr-language",
-        help="Language to use for Tesseract OCR (like eng, chi_sim, chi_tra, chi_tra_vert etc.))",
+        help="Language to use for OCR. For Tesseract, use codes like eng, chi_sim. For Apple Vision, use codes like eng, zh-Hans.",
         type=str,
         default=TESSERACT_OCR_DEFAULT_LANG,
     )
-
     args = parser.parse_args()
     args.chunk_size = get_default_chunk_size(args.model)
     return args
@@ -83,9 +83,20 @@ def get_args():
 
 def main():
     """Make a jazz noise here"""
-
     args = get_args()
+    ocr_engine = "tesseract"
+    if sys.platform == "darwin":
+        if args.ocr_engine == "apple-vision":
+            try:
+                import apple_vision_utils
 
+                ocr_engine = "apple-vision"
+            except ImportError:
+                print(
+                    "Warning: 'apple-vision' OCR engine selected, but 'apple-vision-utils' is not installed. Falling back to 'tesseract'.",
+                    file=sys.stderr,
+                )
+        # if args.ocr_engine is 'tesseract', it's already the default
     print(f"Loading PDF from {args.pdf_path} ...", file=sys.stderr)
     if args.force_ocr or args.fallback_ocr:
         docs = load_pdf(
@@ -93,14 +104,14 @@ def main():
             use_ocr_if_no_text_detected_on_page=True,
             ocr_language=args.ocr_language,
             force_ocr=args.force_ocr,
+            ocr_engine=ocr_engine,
         )
     else:
         docs = load_pdf(args.pdf_path)
     num_whole_pdf_pages = len(docs)
     if args.pages and args.page_slice:
         print(
-            "Please specify either --pages or --page-slice, not both",
-            file=sys.stderr,
+            "Please specify either --pages or --page-slice, not both", file=sys.stderr
         )
         sys.exit(1)
     if args.pages:
@@ -108,15 +119,17 @@ def main():
         docs = [doc for doc in docs if doc.metadata["page"] in args.pages]
     if args.page_slice:
         args.pages = list(
-            x - 1
-            for x in list(range(num_whole_pdf_pages))[
-                convert_str_slice_notation_to_slice(args.page_slice)
-            ]
+            (
+                x - 1
+                for x in list(range(num_whole_pdf_pages))[
+                    convert_str_slice_notation_to_slice(args.page_slice)
+                ]
+            )
         )
         docs = [doc for doc in docs if doc.metadata["page"] in args.pages]
     texts = [doc.page_content for doc in docs]
     all_text = "\n".join(texts)
-    word_count = get_word_count((all_text))
+    word_count = get_word_count(all_text)
     char_count = len(all_text)
     print(
         f"Loaded {len(docs)} pages. Word count: {word_count} Char count: {len(all_text)}",
@@ -146,10 +159,10 @@ def main():
     elif word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
-        needs_splitting = False
+        needs_splitting = False  # type: ignore
     deliver_prompts(
         what=args.what,
-        documents=[merged] if args.merge or args.no_split else docs,  # type: ignore
+        documents=[merged] if args.merge or args.no_split else docs,
         needs_splitting=needs_splitting,
         copy=args.copy,
         edit=args.edit,
