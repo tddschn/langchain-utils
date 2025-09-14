@@ -36,6 +36,7 @@ refstmtprompt = "langchain_utils.job_search.lcu_referral_statement:main"
 
 [tool.poetry.dependencies]
 python = ">=3.11, <4.0"
+apple-vision-utils = { version = "^1.0.2", platform = "darwin" }
 langchain = "^0.0.351"
 youtube-transcript-api = "^0.5.0"
 pytube = "^15.0.0"
