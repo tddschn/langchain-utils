@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
+TESSERACT_TO_APPLE_VISION_LANG_MAP = {
+    "eng": "eng",
+    "fra": "fra",
+    "deu": "deu",
+    "chi_sim": "zh-Hans",
+    "chi_sim_vert": "zh-Hans",
+    "chi_tra": "zh-Hant",
+    "chi_tra_vert": "zh-Hant",
+}
 DEFAULT_PDF_WHAT = "the content of a PDF file"
 DEFAULT_URL_WHAT = "the content of a webpage"
 DEFAULT_HTML_WHAT = "the text content of a html file"
@@ -34,40 +43,3 @@ _MACOS_CONDA_ENV_EG_TESSDATA_PREFIX = (
     "/usr/local/Caskroom/miniconda/base/envs/eg/share/tessdata/"
 )
 USER_AGENT_WINDOWS_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-
-
-def _load_pdf_with_apple_vision(pdf_path: str, ocr_language: str) -> list["Document"]:
-    """Helper to load PDF with Apple Vision, only called on macOS."""
-    from apple_vision_utils.utils import pdf_to_images, image_to_text
-    from langchain.docstore.document import Document
-    import tempfile
-    import fitz
-
-    docs = []
-    fitz_doc = fitz.open(pdf_path)  # type: ignore
-    doc_metadata = {
-        k: fitz_doc.metadata[k]
-        for k in fitz_doc.metadata
-        if type(fitz_doc.metadata[k]) in [str, int]
-    }
-    with tempfile.TemporaryDirectory() as temp_dir:
-        image_paths = pdf_to_images(pdf_path, output_dir=temp_dir)
-        apple_vision_lang = _map_tesseract_lang_to_apple_vision(ocr_language)
-        for i, img_path in enumerate(image_paths):
-            ocr_results = image_to_text(img_path, lang=apple_vision_lang)
-            page_text = "\n".join([res["text"] for res in ocr_results])
-            metadata = {
-                "source": pdf_path,
-                "file_path": pdf_path,
-                "page": i,
-                "total_pages": len(fitz_doc),
-                **doc_metadata,
-            }
-            doc = Document(page_content=page_text, metadata=metadata)
-            docs.append(doc)
-    return docs
-
-
-def _map_tesseract_lang_to_apple_vision(lang: str) -> str:
-    """Helper to map tesseract language codes to Apple Vision language codes."""
-    return TESSERACT_TO_APPLE_VISION_LANG_MAP.get(lang, lang)

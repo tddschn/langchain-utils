@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
+import sys
+from langchain_utils.config import (
+    TESSERACT_OCR_DEFAULT_LANG,
+    TESSERACT_TO_APPLE_VISION_LANG_MAP,
+)
 from typing import TYPE_CHECKING, Literal, Union, Sequence
 from langchain_utils.utils import extract_github_info, get_github_file_raw_url
-from langchain_utils.config import TESSERACT_OCR_DEFAULT_LANG
 
 if TYPE_CHECKING:
     from langchain.docstore.document import Document
@@ -131,4 +135,47 @@ def load_pandoc(
         command.extend(["-f", input_format])
     result = subprocess.run(command, capture_output=True, text=True, check=True)
     docs = [Document(page_content=result.stdout)]
+    return docs
+
+
+def _map_tesseract_lang_to_apple_vision(lang: str) -> str:
+    """Helper to map tesseract language codes to Apple Vision language codes."""
+    return TESSERACT_TO_APPLE_VISION_LANG_MAP.get(lang, lang)
+
+
+def _load_pdf_with_apple_vision(pdf_path: str, ocr_language: str) -> list["Document"]:
+    """Helper to load PDF with Apple Vision, only called on macOS."""
+    from apple_vision_utils.utils import pdf_to_images, image_to_text
+    from langchain.docstore.document import Document
+    import tempfile
+    import fitz
+
+    docs = []
+    fitz_doc = fitz.open(pdf_path)  # type: ignore
+
+    doc_metadata = {}
+    if fitz_doc.metadata:
+        doc_metadata = {
+            k: fitz_doc.metadata[k]
+            for k in fitz_doc.metadata
+            if type(fitz_doc.metadata[k]) in [str, int]
+        }
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        image_paths = pdf_to_images(pdf_path, output_dir=temp_dir)
+        apple_vision_lang = _map_tesseract_lang_to_apple_vision(ocr_language)
+
+        for i, img_path in enumerate(image_paths):
+            ocr_results = image_to_text(img_path, lang=apple_vision_lang)
+            page_text = "\n".join([res["text"] for res in ocr_results])
+
+            metadata = {
+                "source": pdf_path,
+                "file_path": pdf_path,
+                "page": i,
+                "total_pages": len(fitz_doc),
+                **doc_metadata,
+            }
+            doc = Document(page_content=page_text, metadata=metadata)
+            docs.append(doc)
     return docs
