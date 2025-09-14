@@ -149,10 +149,11 @@ def _load_pdf_with_apple_vision(pdf_path: str, ocr_language: str) -> list["Docum
     from langchain.docstore.document import Document
     import tempfile
     import fitz
+    import logging
 
+    logging.info(f"Starting PDF processing with Apple Vision for: {pdf_path}")
     docs = []
     fitz_doc = fitz.open(pdf_path)  # type: ignore
-
     doc_metadata = {}
     if fitz_doc.metadata:
         doc_metadata = {
@@ -160,15 +161,21 @@ def _load_pdf_with_apple_vision(pdf_path: str, ocr_language: str) -> list["Docum
             for k in fitz_doc.metadata
             if type(fitz_doc.metadata[k]) in [str, int]
         }
-
     with tempfile.TemporaryDirectory() as temp_dir:
+        logging.info("Converting PDF to images...")
         image_paths = pdf_to_images(pdf_path, output_dir=temp_dir)
+        logging.info(f"Converted PDF to {len(image_paths)} images.")
         apple_vision_lang = _map_tesseract_lang_to_apple_vision(ocr_language)
-
+        logging.info(f"Using Apple Vision language code: '{apple_vision_lang}'")
         for i, img_path in enumerate(image_paths):
+            logging.info(
+                f"Performing OCR on page {i + 1}/{len(image_paths)}: {img_path}"
+            )
             ocr_results = image_to_text(img_path, lang=apple_vision_lang)
             page_text = "\n".join([res["text"] for res in ocr_results])
-
+            logging.info(
+                f"Page {i + 1} OCR complete. Found {len(ocr_results)} text blocks."
+            )
             metadata = {
                 "source": pdf_path,
                 "file_path": pdf_path,
@@ -178,4 +185,5 @@ def _load_pdf_with_apple_vision(pdf_path: str, ocr_language: str) -> list["Docum
             }
             doc = Document(page_content=page_text, metadata=metadata)
             docs.append(doc)
+    logging.info(f"Finished PDF processing for: {pdf_path}")
     return docs

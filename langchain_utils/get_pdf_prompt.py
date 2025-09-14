@@ -83,20 +83,30 @@ def get_args():
 
 def main():
     """Make a jazz noise here"""
+    import logging
+
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    )
     args = get_args()
     ocr_engine = "tesseract"
     if sys.platform == "darwin":
-        if args.ocr_engine == "apple-vision":
+        if hasattr(args, "ocr_engine") and args.ocr_engine == "apple-vision":
             try:
                 import apple_vision_utils
 
                 ocr_engine = "apple-vision"
+                logging.info("Using 'apple-vision' OCR engine.")
             except ImportError:
+                logging.warning(
+                    "'apple-vision' OCR engine selected, but 'apple-vision-utils' is not installed. Falling back to 'tesseract'."
+                )
                 print(
                     "Warning: 'apple-vision' OCR engine selected, but 'apple-vision-utils' is not installed. Falling back to 'tesseract'.",
                     file=sys.stderr,
                 )
-        # if args.ocr_engine is 'tesseract', it's already the default
+        else:
+            logging.info("Using 'tesseract' OCR engine on macOS.")
     print(f"Loading PDF from {args.pdf_path} ...", file=sys.stderr)
     if args.force_ocr or args.fallback_ocr:
         docs = load_pdf(
@@ -159,7 +169,7 @@ def main():
     elif word_count > args.chunk_size * 0.75:
         needs_splitting = True
     else:
-        needs_splitting = False  # type: ignore
+        needs_splitting = False
     deliver_prompts(
         what=args.what,
         documents=[merged] if args.merge or args.no_split else docs,
