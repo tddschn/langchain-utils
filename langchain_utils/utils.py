@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from typing import TYPE_CHECKING, Callable, NoReturn
 import sys
 from .prompts import (
@@ -9,7 +8,6 @@ from .prompts import (
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST,
     REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED,
 )
-
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -24,6 +22,7 @@ def convert_str_slice_notation_to_slice(str_slice: str) -> slice:
     # '3' -> slice(3)
     # '1:8:2' -> slice(1, 8, 2)
     # start
+
     def int_or_none(s: str) -> int | None:
         try:
             return int(s)
@@ -56,7 +55,6 @@ def get_token_count(s: str, model_name: str = "gpt-3.5-turbo") -> int:
 
     enc = encoding_for_model(model_name)
     tokenized_text = enc.encode(s)
-
     # calculate the number of tokens in the encoded text
     return len(tokenized_text)
 
@@ -73,9 +71,9 @@ def pymupdf_doc_page_info(document: "Document") -> str:
     metadata = document.metadata
     total_pages_in_metadata = "total_pages" in metadata
     if "page_number" in metadata and total_pages_in_metadata:
-        return f', Page {metadata["page_number"]}/{metadata["total_pages"]}'
+        return f", Page {metadata['page_number']}/{metadata['total_pages']}"
     elif "page" in metadata and total_pages_in_metadata:
-        return f', Page {metadata["page"] + 1}/{metadata["total_pages"]}'
+        return f", Page {metadata['page'] + 1}/{metadata['total_pages']}"
     else:
         return ""
 
@@ -83,7 +81,7 @@ def pymupdf_doc_page_info(document: "Document") -> str:
 def html_source_info(document: "Document") -> str:
     metadata = document.metadata
     if "source" in metadata:
-        return f', Title: {metadata["title"]}, Source: {metadata["source"]}'
+        return f", Title: {metadata['title']}, Source: {metadata['source']}"
     else:
         return ""
 
@@ -91,7 +89,7 @@ def html_source_info(document: "Document") -> str:
 def general_document_source_info(document: "Document") -> str:
     metadata = document.metadata
     if "source" in metadata:
-        return f', Source: {metadata["source"]}'
+        return f", Source: {metadata['source']}"
     else:
         return ""
 
@@ -140,124 +138,103 @@ def deliver_prompts(
     out: str | None = None,
 ):
     from langchain.prompts import PromptTemplate
+    from langchain.text_splitter import TokenTextSplitter
+    import pyperclip
 
-    def deliver_single_doc(document: "Document"):
-        if raw:
-            template = RAW_TEMPLATE
-        elif raw_triple_quotes:
-            template = RAW_TRIPLE_QUOTES_TEMPLATE
-        else:
-            template = REPLY_OK_IF_YOU_READ_TEMPLATE
-        prompt = PromptTemplate.from_template(template)
-        content = document.page_content
-        if raw or raw_triple_quotes:
-            formatted_prompt = prompt.format(content=content)
-        else:
-            formatted_prompt = prompt.format(what=what, content=content)
-
-        def edit_prompt(formatted_prompt: str = formatted_prompt):
-            formatted_prompt_path = save_str_to_tempfile(
-                formatted_prompt, suffix=".txt"
-            )
-            open_file(formatted_prompt_path)
+    if dry_run:
+        print(
+            "Dry running. Prompts will be described but not delivered.", file=sys.stderr
+        )
+    if needs_splitting:
+        splitter = TokenTextSplitter(encoding_name="cl100k_base", chunk_size=chunk_size)
+        documents = splitter.split_documents(documents)
+        if parts:
+            len_splitted = len(documents)
+            valid_parts = [p for p in parts if 1 <= p <= len_splitted]
             print(
-                f"Please edit the prompt at {formatted_prompt_path} and copy it yourself.",
+                f"Selecting {len(valid_parts)} parts out of {len_splitted}.",
                 file=sys.stderr,
             )
-            return
-
-        if edit and not dry_run:
-            edit_prompt()
-            return
-        if copy:
-            print(
-                f"Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(document)}",
-                file=sys.stderr,
-            )
-            if not dry_run:
-                import pyperclip
-
-                pyperclip.copy(formatted_prompt)
-                print("Prompt copied to clipboard.", file=sys.stderr)
-        elif out:
-            with open(out, "w") as f:
-                f.write(formatted_prompt)
-                print(f"Prompt written to {out}.", file=sys.stderr)
-        else:
-            print(formatted_prompt)
-
-    def deliver_multiple_docs(documents: list["Document"]):
-        if len(documents) == 1:
-            deliver_single_doc(documents[0])
-            return
-        if edit:
-            print(f"Please copy the prompts after each edits.", file=sys.stderr)
+            print(f"Using parts: {valid_parts}", file=sys.stderr)
+            documents = [documents[i - 1] for i in valid_parts]
+    # --- New Non-Interactive File Output Logic ---
+    if out:
+        all_prompts = []
+        num_docs = len(documents)
         for i, doc in enumerate(documents):
-            num_chunks = len(documents)
-            if raw or raw_triple_quotes:
-                if raw:
-                    template = RAW_TEMPLATE
-                else:
-                    template = RAW_TRIPLE_QUOTES_TEMPLATE
-                prompt = PromptTemplate.from_template(template)
-            elif i == 0:
-                prompt = PromptTemplate.from_template(
-                    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST
-                )
+            current_what = what
+            if num_docs > 1:
+                current_what = f"part {i + 1}/{num_docs} of {what}"
+            if raw:
+                template = RAW_TEMPLATE
+            elif raw_triple_quotes:
+                template = RAW_TRIPLE_QUOTES_TEMPLATE
             else:
-                prompt = PromptTemplate.from_template(
-                    REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
-                ).partial(x=str(i + 1))
+                template = REPLY_OK_IF_YOU_READ_TEMPLATE
+            prompt = PromptTemplate.from_template(template)
             content = doc.page_content
             if raw or raw_triple_quotes:
                 formatted_prompt = prompt.format(content=content)
             else:
-                formatted_prompt = prompt.format(what=what, content=content)
-            if dry_run:
-                print(
-                    f"Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
-                )
-                continue
-            if edit:
-                input(
-                    f"Press Enter to edit prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
-                )
-                formatted_prompt_path = save_str_to_tempfile(
-                    formatted_prompt, suffix=".txt"
-                )
-                open_file(formatted_prompt_path)
-                continue
-            input(
-                f"Press Enter to copy prompt {i+1}/{num_chunks}. Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}: "
-            )
-            import pyperclip
-
-            pyperclip.copy(formatted_prompt)
-
-    if dry_run:
+                formatted_prompt = prompt.format(what=current_what, content=content)
+            all_prompts.append(formatted_prompt)
+        # Join all parts with a clear separator for the output file
+        final_output = "\n\n---\n\n".join(all_prompts)
+        with open(out, "w") as f:
+            f.write(final_output)
         print(
-            f"Dry running. Nothing will be copied to your clipboard, and you don'"
-            "t need to press Enter to move forward."
+            f"Successfully wrote {len(all_prompts)} part(s) to {out}.", file=sys.stderr
         )
-    if needs_splitting:
-        from langchain.text_splitter import TokenTextSplitter
-
-        splitter = TokenTextSplitter(encoding_name="cl100k_base", chunk_size=chunk_size)
-        splitted = splitter.split_documents(documents)
-        if parts:
-            len_splitted = len(splitted)
-            parts = list({part for part in parts if 0 <= part - 1 < len_splitted})
+        return  # Exit after writing to file
+    # --- Refactored Interactive/Clipboard/stdout Logic ---
+    num_docs = len(documents)
+    for i, doc in enumerate(documents):
+        if raw:
+            template = RAW_TEMPLATE
+        elif raw_triple_quotes:
+            template = RAW_TRIPLE_QUOTES_TEMPLATE
+        elif num_docs == 1:
+            template = REPLY_OK_IF_YOU_READ_TEMPLATE
+        elif i == 0:
+            template = REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_FIRST
+        else:
+            template = REPLY_OK_IF_YOU_READ_TEMPLATE_SPLITTED_CONTINUED
+        prompt_template = PromptTemplate.from_template(template)
+        if i > 0 and num_docs > 1 and (not raw) and (not raw_triple_quotes):
+            prompt_template = prompt_template.partial(x=str(i + 1))
+        content = doc.page_content
+        if raw or raw_triple_quotes:
+            formatted_prompt = prompt_template.format(content=content)
+        else:
+            formatted_prompt = prompt_template.format(what=what, content=content)
+        print(
+            f"--- Prompt {i + 1}/{num_docs} --- Word Count: {get_word_count(formatted_prompt)}, Char count: {len(formatted_prompt)}{extra_chunk_info_fn(doc)}",
+            file=sys.stderr,
+        )
+        if dry_run:
+            continue
+        if edit:
+            prompt_path = save_str_to_tempfile(formatted_prompt, suffix=".txt")
+            open_file(prompt_path)
             print(
-                f"Selecting {len(parts)} parts out of {len_splitted}.", file=sys.stderr
+                f"Prompt for part {i + 1} opened for editing at: {prompt_path}",
+                file=sys.stderr,
             )
-            print(f"Using parts: {parts}", file=sys.stderr)
-            splitted = [splitted[i - 1] for i in parts]
-        deliver_multiple_docs(splitted)
-
-    elif should_be_only_one_doc:
-        deliver_single_doc(documents[0])
-    else:
-        deliver_multiple_docs(documents)
+            if i < num_docs - 1:
+                input("Press Enter to process the next part...")
+        elif copy:
+            pyperclip.copy(formatted_prompt)
+            print(f"Prompt {i + 1}/{num_docs} copied to clipboard.", file=sys.stderr)
+            if i < num_docs - 1:
+                try:
+                    input("Press Enter to copy the next part, or Ctrl+C to exit...")
+                except (KeyboardInterrupt, EOFError):
+                    print("\nExiting.", file=sys.stderr)
+                    return
+        else:
+            print(formatted_prompt)
+            if i < num_docs - 1:
+                print("\n---\n")
 
 
 def assert_never(a: NoReturn) -> NoReturn:
@@ -290,7 +267,7 @@ def save_clipboard_to_tempfile() -> str:
 
 
 def get_percentage_non_ascii(s: str) -> float:
-    return sum(1 for c in s if ord(c) >= 128) / len(s)
+    return sum((1 for c in s if ord(c) >= 128)) / len(s)
 
 
 def get_default_chunk_size(model: str | None = None) -> int:
@@ -306,9 +283,8 @@ def extract_github_info(url: str) -> dict[str, str] | None:
 
     # Define a regular expression to match GitHub URLs
     pattern = (
-        r"^https?://github\.com/([^/]+)/([^/]+)(?:/(?:tree|blob)/([^/]+)(?:/(.+))?)?$"
+        "^https?://github\\.com/([^/]+)/([^/]+)(?:/(?:tree|blob)/([^/]+)(?:/(.+))?)?$"
     )
-
     # Use the regular expression to extract the URL components
     match = re.match(pattern, url)
     if match:
@@ -320,14 +296,12 @@ def extract_github_info(url: str) -> dict[str, str] | None:
         file_path = (
             match.group(4) or "README.md"
         )  # Use "README.md" as the default file path if not provided
-
         return {
             "repo_owner": repo_owner,
             "repo_name": repo_name,
             "revision": revision,
             "file_path": file_path,
         }
-
     return None
 
 
@@ -339,7 +313,6 @@ def get_github_file_raw_url(
 ):
     # Construct the raw URL for the README.md file
     raw_url = f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{revision}/{file_path}"
-
     return raw_url
 
 
@@ -347,27 +320,23 @@ def substack_html_to_md(html: str) -> str:
     # cSpell:disable
     from bs4 import BeautifulSoup
     from markdownify import markdownify as md
-    # cSpell:enable
 
+    # cSpell:enable
     # Parse the HTML content
     soup = BeautifulSoup(html, "html.parser")
-
     # Extract the title and the target div content
     title = soup.find("title").text if soup.find("title") else ""  # type: ignore
     target_div = soup.select_one("div.available-content > div")
-
     # Remove all sub-divs from the target div
     if target_div:
         for sub_div in target_div.find_all("div", recursive=True):
             sub_div.decompose()
-
     # Convert the title and the cleaned div content to Markdown
     markdown_content = (
         f"# {title}\n\n" + md(str(target_div), heading_style="ATX")
         if target_div
         else "# " + title
     )
-
     return markdown_content
 
 
@@ -378,9 +347,7 @@ def url_to_html(url: str) -> str:
 
     # Create a request with the specified user agent
     req = Request(url, headers={"User-Agent": USER_AGENT_WINDOWS_CHROME})
-
     # Open the URL and read the HTML content
     with urlopen(req) as response:
         html_content = response.read().decode("utf-8")
-
     return html_content
