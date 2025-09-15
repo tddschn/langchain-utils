@@ -157,34 +157,24 @@ def deliver_prompts(
             )
             print(f"Using parts: {valid_parts}", file=sys.stderr)
             documents = [documents[i - 1] for i in valid_parts]
-    # --- New Non-Interactive File Output Logic ---
     if out:
-        all_prompts = []
-        num_docs = len(documents)
-        for i, doc in enumerate(documents):
-            current_what = what
-            if num_docs > 1:
-                current_what = f"part {i + 1}/{num_docs} of {what}"
-            if raw:
-                template = RAW_TEMPLATE
-            elif raw_triple_quotes:
-                template = RAW_TRIPLE_QUOTES_TEMPLATE
-            else:
-                template = REPLY_OK_IF_YOU_READ_TEMPLATE
-            prompt = PromptTemplate.from_template(template)
+        all_parts = []
+        for doc in documents:
             content = doc.page_content
-            if raw or raw_triple_quotes:
-                formatted_prompt = prompt.format(content=content)
+            # For file output, the default is to just use the content, without prompt framing.
+            # We still respect --raw (`raw_triple_quotes`) if specified.
+            if raw_triple_quotes:
+                # Corresponds to RAW_TRIPLE_QUOTES_TEMPLATE
+                formatted_part = f'"""\n{content}\n"""'
             else:
-                formatted_prompt = prompt.format(what=current_what, content=content)
-            all_prompts.append(formatted_prompt)
-        # Join all parts with a clear separator for the output file
-        final_output = "\n\n---\n\n".join(all_prompts)
+                # This covers the default case for file output and --raw-no-quotes (`raw`)
+                formatted_part = content
+            all_parts.append(formatted_part)
+        # Join all parts with '---' on its own line
+        final_output = "\n---\n".join(all_parts)
         with open(out, "w") as f:
             f.write(final_output)
-        print(
-            f"Successfully wrote {len(all_prompts)} part(s) to {out}.", file=sys.stderr
-        )
+        print(f"Successfully wrote {len(all_parts)} part(s) to {out}.", file=sys.stderr)
         return  # Exit after writing to file
     # --- Refactored Interactive/Clipboard/stdout Logic ---
     num_docs = len(documents)
